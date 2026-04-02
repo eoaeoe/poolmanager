@@ -1,0 +1,16 @@
+{
+  "name": "poolmanager",
+  "version": "1.0.0",
+  "description": "PoolManager (administración de piscinas)",
+  "private": true,
+  "workspaces": [
+    "apps/backend",
+    "apps/frontend"
+  ],
+  "scripts": {
+    "dev:front": "npm run dev -w apps/frontend",
+    "dev:back": "npm run dev -w apps/backend",
+    "build:front": "npm run build -w apps/frontend",
+    "start:back": "npm run start -w apps/backend"
+  }
+}
