@@ -1,4 +1,4 @@
-import React from "react";
+// import React from "react";
 import ReactDOM from "react-dom/client";
 import { PrimeReactProvider } from "primereact/api";
 import App from "./App";
@@ -10,11 +10,11 @@ import "primeicons/primeicons.css";
 import "primeflex/primeflex.css";
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <React.StrictMode>
-    <PrimeReactProvider value={{ ripple: true }}>
-      <AuthProvider>
-        <App />
-      </AuthProvider>
-    </PrimeReactProvider>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <PrimeReactProvider value={{ ripple: true }}>
+    <AuthProvider>
+      <App />
+    </AuthProvider>
+  </PrimeReactProvider>,
+  // </React.StrictMode>,
 );

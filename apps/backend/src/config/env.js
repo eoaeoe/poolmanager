@@ -7,6 +7,12 @@ export const env = {
   frontendUrl: process.env.FRONTEND_URL,
   nodeEnv: process.env.NODE_ENV || "development",
 
+  dbHost: process.env.DB_HOST,
+  dbPort: process.env.DB_PORT || 5432,
+  dbName: process.env.DB_NAME,
+  dbUser: process.env.DB_USER,
+  dbPassword: process.env.DB_PASSWORD,
+
   jwtAccessSecret: process.env.JWT_ACCESS_SECRET,
   jwtRefreshSecret: process.env.JWT_REFRESH_SECRET,
   jwtAccessExpiresIn: process.env.JWT_ACCESS_EXPIRES_IN || "60m",

@@ -1,40 +1,42 @@
 import bcrypt from "bcryptjs";
-
-const users = [
-  {
-    id: "1",
-    name: "Jefe Demo",
-    email: "boss@poolmanager.com",
-    role: "boss",
-    passwordHash: bcrypt.hashSync("123456", 10),
-  },
-  {
-    id: "2",
-    name: "Empleado Demo",
-    email: "employee@poolmanager.com",
-    role: "employee",
-    passwordHash: bcrypt.hashSync("123456", 10),
-  },
-];
-
-const refreshTokensStore = new Map();
+import { Op } from "sequelize";
+import { RefreshToken, User } from "../../../models/index.js";
 
 export async function findUserByEmail(email) {
-  return users.find((user) => user.email === email) ?? null;
+  return User.findOne({ where: { email } });
 }
 
 export async function validatePassword(plainPassword, passwordHash) {
   return bcrypt.compare(plainPassword, passwordHash);
 }
 
-export async function saveRefreshToken(userId, refreshToken) {
-  refreshTokensStore.set(userId, refreshToken);
+export async function saveRefreshToken(userId, token, expiresAt) {
+  return RefreshToken.create({
+    userId,
+    token,
+    expiresAt,
+  });
 }
 
-export async function getRefreshTokenByUserId(userId) {
-  return refreshTokensStore.get(userId) ?? null;
+export async function getRefreshToken(token) {
+  return RefreshToken.findOne({
+    where: {
+      token,
+      expiresAt: {
+        [Op.gt]: new Date(),
+      },
+    },
+  });
 }
 
-export async function deleteRefreshTokenByUserId(userId) {
-  refreshTokensStore.delete(userId);
+export async function deleteRefreshToken(token) {
+  return RefreshToken.destroy({
+    where: { token },
+  });
+}
+
+export async function deleteRefreshTokensByUserId(userId) {
+  return RefreshToken.destroy({
+    where: { userId },
+  });
 }

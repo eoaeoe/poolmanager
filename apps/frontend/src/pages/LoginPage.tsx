@@ -26,7 +26,7 @@ export default function LoginPage() {
 
   return (
     <div className="flex align-items-center justify-content-center min-h-screen p-3">
-      <Card title="Acceso a PoolManager" className="w-full md:w-30rem">
+      <Card title="PoolManager" className="w-full md:w-30rem">
         <div className="flex flex-column gap-3">
           <span className="p-float-label">
             <InputText
@@ -38,7 +38,7 @@ export default function LoginPage() {
             <label htmlFor="email">Email</label>
           </span>
 
-          <span className="p-float-label">
+          <span className="p-float-label mt-3 mb-3">
             <Password
               inputId="password"
               value={password}

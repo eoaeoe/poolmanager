@@ -1,8 +1,9 @@
 import { env } from "../../config/env.js";
 import {
-  deleteRefreshTokenByUserId,
+  deleteRefreshToken,
+  deleteRefreshTokensByUserId,
   findUserByEmail,
-  getRefreshTokenByUserId,
+  getRefreshToken,
   saveRefreshToken,
   validatePassword,
 } from "./auth.service.js";
@@ -74,7 +75,11 @@ export async function login(req, res) {
   const accessToken = signAccessToken(tokenPayload);
   const refreshToken = signRefreshToken(tokenPayload);
 
-  await saveRefreshToken(user.id, refreshToken);
+  const refreshExpiresAt = new Date();
+  refreshExpiresAt.setDate(refreshExpiresAt.getDate() + 7);
+
+  await deleteRefreshTokensByUserId(user.id);
+  await saveRefreshToken(user.id, refreshToken, refreshExpiresAt);
   setRefreshCookie(res, refreshToken);
 
   return res.json({
@@ -95,9 +100,9 @@ export async function refresh(req, res) {
   try {
     const decoded = verifyRefreshToken(refreshToken);
 
-    const storedToken = await getRefreshTokenByUserId(decoded.sub);
+    const storedToken = await getRefreshToken(refreshToken);
 
-    if (!storedToken || storedToken !== refreshToken) {
+    if (!storedToken) {
       return res.status(401).json({
         message: "Refresh token inválido",
       });
@@ -113,7 +118,7 @@ export async function refresh(req, res) {
     return res.json({
       accessToken: newAccessToken,
     });
-  } catch (error) {
+  } catch {
     return res.status(401).json({
       message: "Refresh token expirado o inválido",
     });
@@ -125,9 +130,8 @@ export async function logout(req, res) {
 
   if (refreshToken) {
     try {
-      const decoded = verifyRefreshToken(refreshToken);
-      await deleteRefreshTokenByUserId(decoded.sub);
-    } catch (error) {
+      await deleteRefreshToken(refreshToken);
+    } catch {
       // Nada: aunque el token esté mal, limpiamos cookie
     }
   }

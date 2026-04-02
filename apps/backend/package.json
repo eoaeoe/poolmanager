@@ -5,11 +5,18 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon src/server.js",
-    "start": "node src/server.js"
+    "start": "node src/server.js",
+    "db:migrate": "sequelize-cli db:migrate --config config/config.cjs",
+    "db:migrate:undo": "sequelize-cli db:migrate:undo --config config/config.cjs",
+    "db:seed": "sequelize-cli db:seed:all --config config/config.cjs",
+    "db:seed:undo": "sequelize-cli db:seed:undo:all --config config/config.cjs"
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
     "cookie-parser": "^1.4.7",
     "jsonwebtoken": "^9.0.3"
+  },
+  "devDependencies": {
+    "sequelize-cli": "^6.6.5"
   }
 }
