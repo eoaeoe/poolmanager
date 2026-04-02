@@ -4,9 +4,9 @@ import type { AuthContextType, AuthUser } from "./auth.types";
 import { api } from "../../services/api";
 import { clearAccessToken, setAccessToken } from "../../services/auth.token";
 
-type Props = {
+type Props = Readonly<{
   children: ReactNode;
-};
+}>;
 
 export function AuthProvider({ children }: Props) {
   const [user, setUser] = useState<AuthUser | null>(null);
