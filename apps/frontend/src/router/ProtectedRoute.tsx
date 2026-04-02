@@ -1,13 +1,22 @@
 import { Navigate, Outlet } from "react-router-dom";
+import { ProgressSpinner } from "primereact/progressspinner";
 import { useAuth } from "../features/auth/useAuth";
 import type { UserRole } from "../features/auth/auth.types";
 
-type Props = {
-  readonly allowedRoles?: UserRole[];
-};
+type Props = Readonly<{
+  allowedRoles?: UserRole[];
+}>;
 
 export function ProtectedRoute({ allowedRoles }: Props) {
-  const { isAuthenticated, user } = useAuth();
+  const { isAuthenticated, isBootstrapping, user } = useAuth();
+
+  if (isBootstrapping) {
+    return (
+      <div className="flex align-items-center justify-content-center min-h-screen">
+        <ProgressSpinner />
+      </div>
+    );
+  }
 
   if (!isAuthenticated || !user) {
     return <Navigate to="/login" replace />;
