@@ -167,7 +167,7 @@
 
   &::before,
   &::after {
-    content: '';
+    content: "";
     position: absolute;
     top: -4.5px;
     border: 5px solid transparent;
@@ -181,4 +181,69 @@
     right: 0;
     border-right-color: var(--border);
   }
+}
+
+html,
+body {
+  font-family: Roboto, sans-serif !important;
+}
+
+body {
+  min-height: 100vh;
+  margin: 0;
+  background: linear-gradient(135deg, #8fb1bf, #0b7eb4);
+}
+
+.cardLogin .p-card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  color: rgb(38 234 240 / 45%);
+}
+
+.cardLogin {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 1rem;
+  box-shadow: none;
+  padding: 2rem 2.5rem;
+  background: transparent;
+}
+
+.cardLogin label {
+  color: white;
+}
+
+.cardLogin input {
+  background: transparent;
+  border: 1px solid #ffffff24;
+  border-radius: 0.5rem;
+  padding: 0.75rem;
+  color: white;
+  font-family: Roboto, sans-serif !important;
+}
+
+.cardLogin svg {
+  color: white;
+}
+
+.cardLogin .p-password > div {
+  width: 100%;
+}
+
+.cardLogin button {
+  width: 100%;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 0.5rem;
+  background: rgb(38 234 240 / 45%);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.cardLogin .p-error {
+  color: #00deff;
+  text-align: center;
 }

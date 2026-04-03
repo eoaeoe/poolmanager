@@ -1,0 +1,7 @@
+nav {
+  color: white;
+}
+
+nav > .text-selected {
+  color: #0af3f4 !important;
+}

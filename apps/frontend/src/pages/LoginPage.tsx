@@ -26,8 +26,18 @@ export default function LoginPage() {
 
   return (
     <div className="flex align-items-center justify-content-center min-h-screen p-3">
-      <Card title="PoolManager" className="w-full md:w-30rem">
-        <div className="flex flex-column gap-3">
+      <Card className="w-full md:w-30rem cardLogin">
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img
+            src="/logo.png"
+            style={{ width: "60px", opacity: 0.8, marginBottom: "0px" }}
+            alt="logo"
+          />
+        </div>
+        <div className="mb-6" style={{ color: "#ffffff26" }}>
+          <h2 className="text-center">PoolManager</h2>
+        </div>
+        <div className="flex flex-column gap-3 mb-3">
           <span className="p-float-label">
             <InputText
               id="email"

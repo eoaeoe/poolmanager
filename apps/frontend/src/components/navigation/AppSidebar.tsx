@@ -1,4 +1,5 @@
 import { NavLink } from "react-router-dom";
+import "./AppSidebar.css";
 import {
   IconDashboard,
   IconPool,
@@ -34,7 +35,7 @@ export function AppSidebar({ mobile = false, onNavigate }: Props) {
 
   return (
     <aside
-      className="surface-0 border-right-1 surface-border h-full"
+      className="surface-0 border-right-0 surface-border h-full"
       style={{
         width: mobile ? "100%" : "260px",
         minHeight: mobile ? "100%" : "100vh",
@@ -42,13 +43,16 @@ export function AppSidebar({ mobile = false, onNavigate }: Props) {
       }}
     >
       <div className="mb-4">
-        <h2 className="m-0 text-xl">PoolManager</h2>
-        <small className="text-color-secondary">
-          {user?.role === "boss" ? "Jefe" : "Empleado"}
-        </small>
+        <div style={{ display: "flex", justifyContent: "center" }}>
+          <img
+            src="/logo.png"
+            style={{ width: "60px", opacity: 0.3, marginBottom: "0px" }}
+            alt="logo"
+          />
+        </div>
       </div>
 
-      <nav className="flex flex-column gap-2">
+      <nav className="flex flex-column gap-2" style={{ marginLeft: "30px" }}>
         {items.map((item) => (
           <NavLink
             key={item.to}
@@ -57,7 +61,7 @@ export function AppSidebar({ mobile = false, onNavigate }: Props) {
             className={({ isActive }) =>
               `no-underline border-round px-3 py-2 flex align-items-center gap-2 transition-duration-150 ${
                 isActive
-                  ? "bg-primary text-white"
+                  ? "bg-primary text-selected"
                   : "text-color hover:surface-100"
               }`
             }

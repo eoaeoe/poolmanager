@@ -11,7 +11,7 @@ export function AppTopbar({ onMenuClick }: Props) {
 
   return (
     <header
-      className="surface-0 border-bottom-1 surface-border flex align-items-center justify-content-between px-3 md:px-4"
+      className="surface-0  surface-border flex align-items-center justify-content-between px-3 md:px-4"
       style={{ height: "70px" }}
     >
       <div className="flex align-items-center gap-2">
@@ -24,19 +24,23 @@ export function AppTopbar({ onMenuClick }: Props) {
         >
           <IconMenu2 size={24} />
         </button>
-
-        <strong className="text-sm md:text-base">
-          Bienvenido, {user?.name}
-        </strong>
       </div>
 
       <div className="flex align-items-center gap-2">
-        <span className="text-color-secondary hidden sm:inline">
-          {user?.role}
-        </span>
+        <strong
+          className="text-sm md:text-base"
+          style={{ color: "aqua !important" }}
+        >
+          {user?.name} ({user?.role})
+        </strong>
         <Button
-          label="Salir"
-          icon="pi pi-sign-out"
+          icon="pi pi-power-off"
+          rounded
+          style={{
+            color: "#aedff6",
+            border: "3px solid #aedff6",
+            marginLeft: "10px",
+          }}
           outlined
           size="small"
           onClick={logout}
