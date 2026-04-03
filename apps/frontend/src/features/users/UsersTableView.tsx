@@ -7,7 +7,7 @@ import {
 } from "primereact/datatable";
 import type { UserItem, UsersSort } from "./users.types";
 
-type Props = {
+type Props = Readonly<{
   users: UserItem[];
   totalRecords: number;
   loading: boolean;
@@ -18,7 +18,7 @@ type Props = {
   onSortChange: (event: DataTableSortEvent) => void;
   onEdit: (user: UserItem) => void;
   onDelete: (user: UserItem) => void;
-};
+}>;
 
 export default function UsersTableView({
   users,
@@ -34,7 +34,7 @@ export default function UsersTableView({
 }: Props) {
   const actionsBodyTemplate = (rowData: UserItem) => {
     return (
-      <div className="flex gap-2">
+      <div className="flex gap-2 celdaBotonesAccion">
         <Button
           icon="pi pi-pencil"
           rounded
@@ -63,7 +63,6 @@ export default function UsersTableView({
       totalRecords={totalRecords}
       onPage={onPageChange}
       loading={loading}
-      responsiveLayout="scroll"
       emptyMessage="No hay usuarios disponibles"
       sortField={sort.field}
       sortOrder={sort.order === 0 ? null : sort.order}
@@ -82,6 +81,7 @@ export default function UsersTableView({
       />
       <Column
         header="Acciones"
+        className="columnaCentrada"
         body={actionsBodyTemplate}
         style={{ width: "10rem" }}
       />

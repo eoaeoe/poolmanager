@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { api } from "../../services/api";
+import { useDebounce } from "../../hooks/useDebounce";
 import type {
   UserFormValues,
   UserItem,
@@ -27,88 +28,158 @@ export function useUsers() {
     },
   });
 
+  const debouncedSearch = useDebounce(state.search, 400);
+  const lastQueryRef = useRef("");
+  const abortControllerRef = useRef<AbortController | null>(null);
+
   const page = useMemo(() => {
     return Math.floor(state.pagination.first / state.pagination.rows) + 1;
   }, [state.pagination.first, state.pagination.rows]);
 
   const sortOrderText = state.sort.order === 1 ? "ASC" : "DESC";
 
-  const loadUsers = async (
-    customPage = page,
-    customRows = state.pagination.rows,
-    customSearch = state.search,
-    customSortField = state.sort.field,
-    customSortOrder = sortOrderText,
-  ) => {
-    try {
-      setState((prev) => ({ ...prev, loading: true }));
-
-      const params = new URLSearchParams({
-        page: String(customPage),
-        limit: String(customRows),
+  const loadUsers = useCallback(
+    async (
+      customPage = page,
+      customRows = state.pagination.rows,
+      customSearch = debouncedSearch,
+      customSortField = state.sort.field,
+      customSortOrder = sortOrderText,
+    ) => {
+      const queryKey = JSON.stringify({
+        page: customPage,
+        rows: customRows,
         search: customSearch,
-        sortField: customSortField || "createdAt",
+        sortField: customSortField,
         sortOrder: customSortOrder,
       });
 
-      const response = await api.get<UsersResponse>(
-        `/users?${params.toString()}`,
-      );
+      if (lastQueryRef.current === queryKey) {
+        return;
+      }
 
-      setState((prev) => ({
-        ...prev,
-        users: response.data.users,
-        totalRecords: response.data.total,
-        loading: false,
-      }));
-    } catch (error) {
-      setState((prev) => ({ ...prev, loading: false }));
-      throw error;
-    }
-  };
+      lastQueryRef.current = queryKey;
+
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
+      try {
+        setState((prev) => ({ ...prev, loading: true }));
+
+        const params = new URLSearchParams({
+          page: String(customPage),
+          limit: String(customRows),
+          search: customSearch,
+          sortField: customSortField || "createdAt",
+          sortOrder: customSortOrder,
+        });
+
+        const response = await api.get<UsersResponse>(
+          `/users?${params.toString()}`,
+          {
+            signal: controller.signal,
+          },
+        );
+
+        setState((prev) => ({
+          ...prev,
+          users: response.data.users,
+          totalRecords: response.data.total,
+          loading: false,
+        }));
+      } catch (error) {
+        const err = error as { name?: string; code?: string };
+        if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED") {
+          return;
+        }
+
+        setState((prev) => ({ ...prev, loading: false }));
+        throw error;
+      }
+    },
+    [
+      page,
+      state.pagination.rows,
+      debouncedSearch,
+      state.sort.field,
+      sortOrderText,
+    ],
+  );
 
   useEffect(() => {
     void loadUsers(
       page,
       state.pagination.rows,
-      state.search,
+      debouncedSearch,
       state.sort.field,
       sortOrderText,
     );
+
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
   }, [
     page,
     state.pagination.rows,
-    state.search,
+    debouncedSearch,
     state.sort.field,
     state.sort.order,
+    sortOrderText,
+    loadUsers,
   ]);
 
   const setPage = (first: number, rows: number) => {
-    setState((prev) => ({
-      ...prev,
-      pagination: { first, rows },
-    }));
+    setState((prev) => {
+      if (prev.pagination.first === first && prev.pagination.rows === rows) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        pagination: { first, rows },
+      };
+    });
   };
 
   const setSearch = (search: string) => {
-    setState((prev) => ({
-      ...prev,
-      search,
-      pagination: {
-        ...prev.pagination,
-        first: 0,
-      },
-    }));
+    setState((prev) => {
+      const nextFirst = 0;
+
+      if (prev.search === search && prev.pagination.first === nextFirst) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        search,
+        pagination: {
+          ...prev.pagination,
+          first: nextFirst,
+        },
+      };
+    });
   };
 
   const setSort = (field: string, order: 1 | -1 | 0 | null | undefined) => {
-    setState((prev) => ({
-      ...prev,
-      sort: {
-        field,
-        order,
-      },
-    }));
+    setState((prev) => {
+      if (prev.sort.field === field && prev.sort.order === order) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        sort: {
+          field,
+          order,
+        },
+      };
+    });
   };
 
   const openCreateDialog = () => {
@@ -162,10 +233,11 @@ export function useUsers() {
         role: values.role,
       });
 
+      lastQueryRef.current = "";
       await loadUsers(
         page,
         state.pagination.rows,
-        state.search,
+        debouncedSearch,
         state.sort.field,
         sortOrderText,
       );
@@ -197,10 +269,11 @@ export function useUsers() {
         role: values.role,
       });
 
+      lastQueryRef.current = "";
       await loadUsers(
         page,
         state.pagination.rows,
-        state.search,
+        debouncedSearch,
         state.sort.field,
         sortOrderText,
       );
@@ -228,10 +301,11 @@ export function useUsers() {
 
   const deleteUser = async (id: string) => {
     await api.delete(`/users/${id}`);
+    lastQueryRef.current = "";
     await loadUsers(
       page,
       state.pagination.rows,
-      state.search,
+      debouncedSearch,
       state.sort.field,
       sortOrderText,
     );

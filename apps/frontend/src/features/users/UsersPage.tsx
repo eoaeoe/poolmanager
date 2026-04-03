@@ -193,8 +193,11 @@ export default function UsersPage() {
         style={{ width: "100%", maxWidth: "32rem" }}
         modal
       >
-        <div className="flex flex-column gap-3">
-          <span className="p-float-label">
+        <div
+          className="flex flex-column gap-3 contenedorInputNuevoUsuario"
+          style={{ paddingTop: "20px" }}
+        >
+          <span className="p-float-label mt-2">
             <InputText
               id="name"
               className="w-full"
@@ -204,7 +207,7 @@ export default function UsersPage() {
             <label htmlFor="name">Nombre</label>
           </span>
 
-          <span className="p-float-label">
+          <span className="p-float-label mt-4">
             <InputText
               id="email"
               className="w-full"
@@ -214,7 +217,7 @@ export default function UsersPage() {
             <label htmlFor="email">Email</label>
           </span>
 
-          <span className="p-float-label">
+          <span className="p-float-label mt-4">
             <Password
               inputId="password"
               value={editingUser.password}
@@ -229,7 +232,7 @@ export default function UsersPage() {
             </label>
           </span>
 
-          <span className="p-float-label">
+          <span className="p-float-label mt-4">
             <Dropdown
               inputId="role"
               className="w-full"

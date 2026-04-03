@@ -5,7 +5,7 @@ main {
 }
 
 main section {
-  background: #aedff6;
+  background: #aedff626;
   padding: 20px;
   border-radius: 10px;
 }
@@ -44,4 +44,20 @@ main section h1 {
 .nombreRolUsuario {
   color: #aedff6 !important;
   font-weight: 100;
+}
+
+th:last-child > div {
+  justify-content: center;
+}
+
+.celdaBotonesAccion {
+  justify-content: center;
+}
+
+.contenedorInputNuevoUsuario .p-password div {
+  width: 100%;
+}
+
+.p-card-content {
+  padding: 0px !important;
 }

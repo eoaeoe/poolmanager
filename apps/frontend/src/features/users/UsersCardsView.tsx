@@ -24,7 +24,7 @@ export default function UsersCardsView({
   onPageChange,
   onEdit,
   onDelete,
-}: Props) {
+}: Readonly<Props>) {
   const itemTemplate = (user: UserItem) => {
     return (
       <div className="col-12">
