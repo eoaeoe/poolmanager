@@ -5,7 +5,7 @@ import LoginPage from "../pages/LoginPage";
 import DashboardPage from "../pages/DashboardPage";
 import PoolsPage from "../pages/PoolsPage";
 import MaintenancePage from "../pages/MaintenancePage";
-import UsersPage from "../pages/UsersPage";
+import UsersPage from "../features/users/UsersPage";
 import NotFoundPage from "../pages/NotFoundPage";
 
 export function AppRouter() {

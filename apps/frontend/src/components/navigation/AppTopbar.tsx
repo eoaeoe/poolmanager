@@ -27,10 +27,7 @@ export function AppTopbar({ onMenuClick }: Props) {
       </div>
 
       <div className="flex align-items-center gap-2">
-        <strong
-          className="text-sm md:text-base"
-          style={{ color: "aqua !important" }}
-        >
+        <strong className="text-sm md:text-base nombreRolUsuario">
           {user?.name} ({user?.role})
         </strong>
         <Button
