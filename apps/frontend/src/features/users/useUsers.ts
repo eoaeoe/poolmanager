@@ -1,12 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { api } from "../../services/api";
+import axios, { AxiosError } from "axios";
+import {
+  getUsersApi,
+  createUserApi,
+  updateUserApi,
+  deleteUserApi,
+} from "./users.api";
 import { useDebounce } from "../../hooks/useDebounce";
-import type {
-  UserFormValues,
-  UserItem,
-  UsersPageState,
-  UsersResponse,
-} from "./users.types";
+import type { UserFormValues, UserItem, UsersPageState } from "./users.types";
 import { emptyUserForm } from "./users.types";
 
 export function useUsers() {
@@ -36,7 +37,7 @@ export function useUsers() {
     return Math.floor(state.pagination.first / state.pagination.rows) + 1;
   }, [state.pagination.first, state.pagination.rows]);
 
-  const sortOrderText = state.sort.order === 1 ? "ASC" : "DESC";
+  const sortOrderText: "ASC" | "DESC" = state.sort.order === 1 ? "ASC" : "DESC";
 
   const loadUsers = useCallback(
     async (
@@ -70,30 +71,27 @@ export function useUsers() {
       try {
         setState((prev) => ({ ...prev, loading: true }));
 
-        const params = new URLSearchParams({
-          page: String(customPage),
-          limit: String(customRows),
+        const data = await getUsersApi({
+          page: customPage,
+          limit: customRows,
           search: customSearch,
           sortField: customSortField || "createdAt",
           sortOrder: customSortOrder,
+          signal: controller.signal,
         });
-
-        const response = await api.get<UsersResponse>(
-          `/users?${params.toString()}`,
-          {
-            signal: controller.signal,
-          },
-        );
 
         setState((prev) => ({
           ...prev,
-          users: response.data.users,
-          totalRecords: response.data.total,
+          users: data.users,
+          totalRecords: data.total,
           loading: false,
         }));
-      } catch (error) {
-        const err = error as { name?: string; code?: string };
-        if (err?.name === "CanceledError" || err?.code === "ERR_CANCELED") {
+      } catch (error: unknown) {
+        if (axios.isCancel(error)) {
+          return;
+        }
+
+        if (error instanceof AxiosError && error.code === "ERR_CANCELED") {
           return;
         }
 
@@ -226,21 +224,10 @@ export function useUsers() {
     setState((prev) => ({ ...prev, saving: true }));
 
     try {
-      await api.post("/users", {
-        name: values.name,
-        email: values.email,
-        password: values.password,
-        role: values.role,
-      });
+      await createUserApi(values);
 
       lastQueryRef.current = "";
-      await loadUsers(
-        page,
-        state.pagination.rows,
-        debouncedSearch,
-        state.sort.field,
-        sortOrderText,
-      );
+      await loadUsers();
 
       setState((prev) => ({
         ...prev,
@@ -262,21 +249,10 @@ export function useUsers() {
     setState((prev) => ({ ...prev, saving: true }));
 
     try {
-      await api.put(`/users/${values.id}`, {
-        name: values.name,
-        email: values.email,
-        password: values.password || undefined,
-        role: values.role,
-      });
+      await updateUserApi(values);
 
       lastQueryRef.current = "";
-      await loadUsers(
-        page,
-        state.pagination.rows,
-        debouncedSearch,
-        state.sort.field,
-        sortOrderText,
-      );
+      await loadUsers();
 
       setState((prev) => ({
         ...prev,
@@ -300,15 +276,10 @@ export function useUsers() {
   };
 
   const deleteUser = async (id: string) => {
-    await api.delete(`/users/${id}`);
+    await deleteUserApi(id);
+
     lastQueryRef.current = "";
-    await loadUsers(
-      page,
-      state.pagination.rows,
-      debouncedSearch,
-      state.sort.field,
-      sortOrderText,
-    );
+    await loadUsers();
   };
 
   return {
