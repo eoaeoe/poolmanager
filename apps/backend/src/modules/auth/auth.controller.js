@@ -19,6 +19,7 @@ function buildUserResponse(user) {
     name: user.name,
     email: user.email,
     role: user.role,
+    imageUrl: user.imageUrl,
   };
 }
 

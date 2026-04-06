@@ -6,6 +6,7 @@ import {
   type DataTableSortEvent,
 } from "primereact/datatable";
 import type { UserItem, UsersSort } from "./users.types";
+import defaultUserImage from "../../assets/default-user.jpg";
 
 type Props = Readonly<{
   users: UserItem[];
@@ -67,7 +68,31 @@ export default function UsersTableView({
       sortField={sort.field}
       sortOrder={sort.order === 0 ? null : sort.order}
       onSort={onSortChange}
+      className="p-datatable-sm"
     >
+      <Column
+        field="image"
+        header=""
+        className="columnaCentrada"
+        body={(rowData: UserItem) => (
+          <div className="flex gap-2 celdaBotonesAccion">
+            <img
+              src={
+                rowData.imageUrl
+                  ? `http://localhost:8080${rowData.imageUrl}`
+                  : defaultUserImage
+              }
+              alt=""
+              style={{
+                width: "40px",
+                height: "40px",
+                objectFit: "cover",
+                borderRadius: "50%",
+              }}
+            />
+          </div>
+        )}
+      />
       <Column field="name" header="Nombre" sortable />
       <Column field="email" header="Email" sortable />
       <Column field="role" header="Rol" sortable />
@@ -80,7 +105,7 @@ export default function UsersTableView({
         }
       />
       <Column
-        header="Acciones"
+        header=""
         className="columnaCentrada"
         body={actionsBodyTemplate}
         style={{ width: "10rem" }}

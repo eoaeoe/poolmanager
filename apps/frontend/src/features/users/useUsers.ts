@@ -5,6 +5,7 @@ import {
   createUserApi,
   updateUserApi,
   deleteUserApi,
+  removeUserImageApi,
 } from "./users.api";
 import { useDebounce } from "../../hooks/useDebounce";
 import type { UserFormValues, UserItem, UsersPageState } from "./users.types";
@@ -198,6 +199,7 @@ export function useUsers() {
         email: user.email,
         password: "",
         role: user.role,
+        imageUrl: user.imageUrl,
       },
     }));
   };
@@ -282,6 +284,22 @@ export function useUsers() {
     await loadUsers();
   };
 
+  const removeUserImage = async (id: string) => {
+    await removeUserImageApi(id);
+
+    setState((prev) => ({
+      ...prev,
+      editingUser: {
+        ...prev.editingUser,
+        imageUrl: null,
+        image: null,
+      },
+    }));
+
+    lastQueryRef.current = "";
+    await loadUsers();
+  };
+
   return {
     users: state.users,
     totalRecords: state.totalRecords,
@@ -301,5 +319,6 @@ export function useUsers() {
     updateEditingUser,
     saveUser,
     deleteUser,
+    removeUserImage,
   };
 }

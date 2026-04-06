@@ -1,6 +1,8 @@
 import bcrypt from "bcryptjs";
 import { Op } from "sequelize";
 import { User } from "../../../models/index.js";
+import fs from "node:fs";
+import path from "node:path";
 
 export async function findUsersPaginated({
   page,
@@ -28,7 +30,7 @@ export async function findUsersPaginated({
   const safeSortOrder = sortOrder === "ASC" ? "ASC" : "DESC";
 
   const { rows, count } = await User.findAndCountAll({
-    attributes: ["id", "name", "email", "role", "createdAt"],
+    attributes: ["id", "name", "email", "role", "imageUrl", "createdAt"],
     where,
     offset,
     limit,
@@ -54,7 +56,7 @@ export async function findUserById(id) {
   return User.findByPk(id);
 }
 
-export async function createUser({ name, email, password, role }) {
+export async function createUser({ name, email, password, role, imageUrl }) {
   const passwordHash = await bcrypt.hash(password, 10);
 
   return User.create({
@@ -62,10 +64,14 @@ export async function createUser({ name, email, password, role }) {
     email,
     passwordHash,
     role,
+    imageUrl: imageUrl || null,
   });
 }
 
-export async function updateUser(id, { name, email, role, password }) {
+export async function updateUser(
+  id,
+  { name, email, role, password, imageUrl },
+) {
   const user = await User.findByPk(id);
 
   if (!user) {
@@ -75,6 +81,10 @@ export async function updateUser(id, { name, email, role, password }) {
   user.name = name ?? user.name;
   user.email = email ?? user.email;
   user.role = role ?? user.role;
+
+  if (imageUrl !== undefined) {
+    user.imageUrl = imageUrl;
+  }
 
   if (password) {
     user.passwordHash = await bcrypt.hash(password, 10);
@@ -91,4 +101,27 @@ export async function deleteUser(id) {
   });
 
   return deletedCount > 0;
+}
+
+export async function removeUserImage(id) {
+  const user = await User.findByPk(id);
+
+  if (!user) return null;
+
+  // borrar archivo si existe
+  if (user.imageUrl) {
+    const filePath = path.resolve(
+      "apps/backend",
+      user.imageUrl.replace("/uploads", "uploads"),
+    );
+
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
+  }
+
+  user.imageUrl = null;
+  await user.save();
+
+  return user;
 }

@@ -3,7 +3,12 @@ import { Op } from "sequelize";
 import { RefreshToken, User } from "../../../models/index.js";
 
 export async function findUserByEmail(email) {
-  return User.findOne({ where: { email } });
+  return User.findOne({
+    where: { email },
+    attributes: {
+      include: ["id", "name", "email", "passwordHash", "role", "imageUrl"],
+    },
+  });
 }
 
 export async function validatePassword(plainPassword, passwordHash) {

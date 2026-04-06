@@ -5,6 +5,7 @@ export type UserItem = {
   name: string;
   email: string;
   role: UserRole;
+  imageUrl?: string | null;
   createdAt: string;
 };
 
@@ -22,6 +23,8 @@ export type UserFormValues = {
   email: string;
   password: string;
   role: UserRole;
+  image?: File | null;
+  imageUrl?: string | null;
 };
 
 export const emptyUserForm: UserFormValues = {
@@ -29,6 +32,8 @@ export const emptyUserForm: UserFormValues = {
   email: "",
   password: "",
   role: "employee",
+  image: null,
+  imageUrl: null,
 };
 
 export type UsersPagination = {

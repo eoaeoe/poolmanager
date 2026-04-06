@@ -3,6 +3,7 @@ import { Card } from "primereact/card";
 import { DataView } from "primereact/dataview";
 import { Paginator, type PaginatorPageChangeEvent } from "primereact/paginator";
 import type { UserItem } from "./users.types";
+import defaultUserImage from "../../assets/default-user.jpg";
 
 type Props = {
   users: UserItem[];
@@ -43,6 +44,23 @@ export default function UsersCardsView({
             <div>
               <span className="font-medium">Fecha alta:</span>{" "}
               {new Date(user.createdAt).toLocaleDateString()}
+            </div>
+
+            <div>
+              <img
+                src={
+                  user.imageUrl
+                    ? `http://localhost:8080${user.imageUrl}`
+                    : defaultUserImage
+                }
+                alt={user.name}
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  objectFit: "cover",
+                  borderRadius: "50%",
+                }}
+              />
             </div>
 
             <div className="flex gap-2 pt-2">

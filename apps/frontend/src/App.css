@@ -185,13 +185,14 @@
 
 html,
 body {
-  font-family: Roboto, sans-serif !important;
+  font-family: "Roboto", sans-serif !important;
 }
 
 body {
   min-height: 100vh;
   margin: 0;
   background: linear-gradient(135deg, #8fb1bf, #0b7eb4);
+  font-size: 14px;
 }
 
 .cardLogin .p-card-title {
@@ -246,4 +247,98 @@ body {
 .cardLogin .p-error {
   color: #00deff;
   text-align: center;
+}
+
+.DialogUser .p-dialog-header {
+  background-color: #1d435f;
+}
+
+.p-component {
+  font-size: 0.9rem;
+  font-family: "Roboto", sans-serif;
+}
+
+/* @media (max-width: 768px) {
+  html {
+    font-size: 13px;
+  }
+} */
+
+.p-dropdown .p-dropdown-label {
+  font-size: 0.9rem;
+  font-family: "Roboto", sans-serif;
+}
+
+.p-dialog-title {
+  font-family: "Roboto", sans-serif;
+  font-weight: 400;
+  text-align: center;
+  border-radius: 6px;
+  background: #1d435f;
+  padding: 5px;
+  color: white;
+}
+
+.p-fileupload-choose {
+  color: white;
+}
+
+.p-inputgroup .p-password-input {
+  border-radius: 0px 6px 6px 0px !important;
+}
+
+.contenedorInputNuevoUsuario {
+  margin-top: 15px;
+}
+
+.p-dialog .p-dialog-content {
+  background: #3a607d;
+  color: #4b5563;
+  padding: 0 1.5rem 2rem 1.5rem;
+}
+
+.p-dialog-footer {
+  padding-left: 0px;
+  padding-right: 0px;
+  padding-bottom: unset;
+  background-color: #1e435f;
+}
+
+.p-dialog-footer div {
+  padding: 0px !important;
+}
+
+.p-dialog-footer button {
+  width: 50%;
+  margin: 0px !important;
+  border-radius: 0px !important;
+  border: none !important;
+  background-color: transparent !important;
+}
+
+.p-inputgroup-addon {
+  background: #1e435f;
+  color: aqua;
+  border: none;
+}
+
+.buttonImageAddDelete {
+  color: white;
+}
+
+.contenedorFileUpload {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.contenedorFileUpload .p-fileupload .custom-choose-btn {
+  width: 48px;
+  height: 48px;
+  justify-content: center;
+  align-items: center;
+}
+
+.p-clickable {
+  display: none !important;
 }

@@ -7,6 +7,7 @@ import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
 import { Password } from "primereact/password";
 import { Toast } from "primereact/toast";
+import defaultUserImage from "../../assets/default-user.jpg";
 import type {
   DataTablePageEvent,
   DataTableSortEvent,
@@ -18,6 +19,7 @@ import type { UserItem } from "./users.types";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import UsersTableView from "./UsersTableView";
 import UsersCardsView from "./UsersCardsView";
+import { FileUpload } from "primereact/fileupload";
 
 const roleOptions = [
   { label: "Empleado", value: "employee" },
@@ -47,6 +49,7 @@ export default function UsersPage() {
     updateEditingUser,
     saveUser,
     deleteUser,
+    removeUserImage,
   } = useUsers();
 
   const onPageChange = (event: DataTablePageEvent) => {
@@ -122,6 +125,27 @@ export default function UsersPage() {
     });
   };
 
+  const customDialogFooter = () => {
+    return (
+      <div className="flex justify-content-center gap-2 pt-2">
+        <Button
+          label="Cancelar"
+          outlined
+          onClick={closeDialog}
+          disabled={saving}
+        />
+        <Button label="Guardar" onClick={handleSave} loading={saving} />
+      </div>
+    );
+  };
+
+  const chooseOptions = {
+    icon: "pi pi-fw pi-images",
+    iconOnly: true,
+    className:
+      "custom-choose-btn p-button-rounded  p-button-text p-button-raised",
+  };
+
   return (
     <section>
       <Toast ref={toast} />
@@ -188,38 +212,91 @@ export default function UsersPage() {
 
       <Dialog
         visible={dialogVisible}
+        className="DialogUser"
         onHide={closeDialog}
         header={editingUser.id ? "Editar usuario" : "Nuevo usuario"}
-        style={{ width: "100%", maxWidth: "32rem" }}
+        footer={customDialogFooter}
+        style={{
+          width: "100%",
+          maxWidth: "32rem",
+        }}
         modal
       >
-        <div
-          className="flex flex-column gap-3 contenedorInputNuevoUsuario"
-          style={{ paddingTop: "20px" }}
-        >
-          <span className="p-float-label mt-2">
+        <div className="flex flex-column gap-3 contenedorInputNuevoUsuario">
+          <div style={{ textAlign: "center" }}>
+            <img
+              src={
+                editingUser?.imageUrl
+                  ? `http://localhost:8080${editingUser.imageUrl}`
+                  : defaultUserImage
+              }
+              alt="Usuario"
+              style={{
+                width: "80px",
+                height: "80px",
+                objectFit: "cover",
+                borderRadius: "50%",
+              }}
+            />
+          </div>
+          <div className="flex  gap-2 contenedorFileUpload">
+            <FileUpload
+              mode="basic"
+              accept="image/png,image/jpeg,image/webp"
+              maxFileSize={2000000}
+              chooseOptions={chooseOptions}
+              auto
+              customUpload
+              onSelect={(e) => {
+                const file = e.files?.[0] ?? null;
+                updateEditingUser({ image: file });
+              }}
+            />
+            {editingUser.imageUrl && (
+              <div style={{ textAlign: "center" }}>
+                <Button
+                  icon="pi pi-times"
+                  rounded
+                  raised
+                  text
+                  severity="danger"
+                  className="buttonImageAddDelete"
+                  onClick={() => removeUserImage(editingUser.id || "")}
+                />
+              </div>
+            )}
+          </div>
+          <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+              <i className="pi pi-user"></i>
+            </span>
             <InputText
               id="name"
+              placeholder="Nombre"
               className="w-full"
               value={editingUser.name}
               onChange={(e) => updateEditingUser({ name: e.target.value })}
             />
-            <label htmlFor="name">Nombre</label>
-          </span>
-
-          <span className="p-float-label mt-4">
+          </div>
+          <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+              <i className="pi pi-envelope"></i>
+            </span>
             <InputText
               id="email"
+              placeholder="Email"
               className="w-full"
               value={editingUser.email}
               onChange={(e) => updateEditingUser({ email: e.target.value })}
             />
-            <label htmlFor="email">Email</label>
-          </span>
-
-          <span className="p-float-label mt-4">
+          </div>
+          <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+              <i className="pi pi-lock"></i>
+            </span>
             <Password
               inputId="password"
+              placeholder="Password"
               value={editingUser.password}
               onChange={(e) => updateEditingUser({ password: e.target.value })}
               toggleMask
@@ -227,12 +304,12 @@ export default function UsersPage() {
               className="w-full"
               inputClassName="w-full"
             />
-            <label htmlFor="password">
-              {editingUser.id ? "Nueva contraseña (opcional)" : "Contraseña"}
-            </label>
-          </span>
+          </div>
 
-          <span className="p-float-label mt-4">
+          <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+              <i className="pi pi-id-card"></i>
+            </span>
             <Dropdown
               inputId="role"
               className="w-full"
@@ -240,10 +317,9 @@ export default function UsersPage() {
               options={roleOptions}
               onChange={(e) => updateEditingUser({ role: e.value })}
             />
-            <label htmlFor="role">Rol</label>
-          </span>
+          </div>
 
-          <div className="flex justify-content-end gap-2 pt-2">
+          {/* <div className="flex justify-content-center gap-2 pt-2">
             <Button
               label="Cancelar"
               outlined
@@ -251,7 +327,7 @@ export default function UsersPage() {
               disabled={saving}
             />
             <Button label="Guardar" onClick={handleSave} loading={saving} />
-          </div>
+          </div> */}
         </div>
       </Dialog>
     </section>

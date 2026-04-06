@@ -1,6 +1,7 @@
 import { Button } from "primereact/button";
 import { IconMenu2 } from "@tabler/icons-react";
 import { useAuth } from "../../features/auth/useAuth";
+import defaultUserImage from "../../assets/default-user.jpg";
 
 type Props = Readonly<{
   onMenuClick: () => void;
@@ -24,12 +25,25 @@ export function AppTopbar({ onMenuClick }: Props) {
         >
           <IconMenu2 size={24} />
         </button>
-      </div>
-
-      <div className="flex align-items-center gap-2">
+        <img
+          src={
+            user?.imageUrl
+              ? `http://localhost:8080${user.imageUrl}`
+              : defaultUserImage
+          }
+          alt="Usuario"
+          style={{
+            width: "40px",
+            height: "40px",
+            objectFit: "cover",
+            borderRadius: "50%",
+          }}
+        />
         <strong className="text-sm md:text-base nombreRolUsuario">
           {user?.name} ({user?.role})
         </strong>
+      </div>
+      <div className="flex align-items-center gap-2">
         <Button
           icon="pi pi-power-off"
           rounded

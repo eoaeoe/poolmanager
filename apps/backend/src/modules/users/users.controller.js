@@ -5,6 +5,7 @@ import {
   findUserById,
   findUsersPaginated,
   updateUser,
+  removeUserImage,
 } from "./users.service.js";
 
 export async function getUsers(req, res) {
@@ -57,7 +58,15 @@ export async function createUserController(req, res) {
       });
     }
 
-    const newUser = await createUser({ name, email, password, role });
+    const imageUrl = req.file ? `/uploads/users/${req.file.filename}` : null;
+
+    const newUser = await createUser({
+      name,
+      email,
+      password,
+      role,
+      imageUrl,
+    });
 
     return res.status(201).json({
       user: {
@@ -65,6 +74,7 @@ export async function createUserController(req, res) {
         name: newUser.name,
         email: newUser.email,
         role: newUser.role,
+        imageUrl: newUser.imageUrl,
         createdAt: newUser.createdAt,
       },
     });
@@ -106,7 +116,17 @@ export async function updateUserController(req, res) {
       }
     }
 
-    const updatedUser = await updateUser(id, { name, email, role, password });
+    const imageUrl = req.file
+      ? `/uploads/users/${req.file.filename}`
+      : existingUser.imageUrl;
+
+    const updatedUser = await updateUser(id, {
+      name,
+      email,
+      role,
+      password,
+      imageUrl,
+    });
 
     return res.json({
       user: {
@@ -114,6 +134,7 @@ export async function updateUserController(req, res) {
         name: updatedUser.name,
         email: updatedUser.email,
         role: updatedUser.role,
+        imageUrl: updatedUser.imageUrl,
         createdAt: updatedUser.createdAt,
       },
     });
@@ -146,6 +167,30 @@ export async function deleteUserController(req, res) {
 
     return res.status(500).json({
       message: "No se pudo eliminar el usuario",
+    });
+  }
+}
+
+export async function removeUserImageController(req, res) {
+  try {
+    const { id } = req.params;
+
+    const user = await removeUserImage(id);
+
+    if (!user) {
+      return res.status(404).json({
+        message: "Usuario no encontrado",
+      });
+    }
+
+    return res.json({
+      message: "Imagen eliminada",
+    });
+  } catch (error) {
+    console.error("REMOVE IMAGE ERROR:", error);
+
+    return res.status(500).json({
+      message: "No se pudo eliminar la imagen",
     });
   }
 }

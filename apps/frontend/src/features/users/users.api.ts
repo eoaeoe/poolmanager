@@ -29,12 +29,18 @@ export async function getUsersApi(params: GetUsersParams) {
 }
 
 export async function createUserApi(values: UserFormValues) {
-  const response = await api.post("/users", {
-    name: values.name,
-    email: values.email,
-    password: values.password,
-    role: values.role,
-  });
+  const formData = new FormData();
+
+  formData.append("name", values.name);
+  formData.append("email", values.email);
+  formData.append("password", values.password);
+  formData.append("role", values.role);
+
+  if (values.image) {
+    formData.append("image", values.image);
+  }
+
+  const response = await api.post("/users", formData);
 
   return response.data;
 }
@@ -44,12 +50,21 @@ export async function updateUserApi(values: UserFormValues) {
     throw new Error("Usuario sin id");
   }
 
-  const response = await api.put(`/users/${values.id}`, {
-    name: values.name,
-    email: values.email,
-    password: values.password || undefined,
-    role: values.role,
-  });
+  const formData = new FormData();
+
+  formData.append("name", values.name);
+  formData.append("email", values.email);
+  formData.append("role", values.role);
+
+  if (values.password) {
+    formData.append("password", values.password);
+  }
+
+  if (values.image) {
+    formData.append("image", values.image);
+  }
+
+  const response = await api.put(`/users/${values.id}`, formData);
 
   return response.data;
 }
@@ -57,4 +72,8 @@ export async function updateUserApi(values: UserFormValues) {
 export async function deleteUserApi(id: string) {
   const response = await api.delete(`/users/${id}`);
   return response.data;
+}
+
+export async function removeUserImageApi(id: string) {
+  await api.delete(`/users/${id}/image`);
 }

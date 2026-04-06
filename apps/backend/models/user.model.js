@@ -26,6 +26,10 @@ export function UserModel(sequelize) {
         type: DataTypes.ENUM("employee", "boss"),
         allowNull: false,
       },
+      imageUrl: {
+        type: DataTypes.STRING(300),
+        allowNull: true,
+      },
     },
     {
       tableName: "users",
