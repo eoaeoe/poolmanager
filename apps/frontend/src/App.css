@@ -280,7 +280,7 @@ body {
 }
 
 .p-fileupload-choose {
-  color: white;
+  color: aqua;
 }
 
 .p-inputgroup .p-password-input {
@@ -288,13 +288,21 @@ body {
 }
 
 .contenedorInputNuevoUsuario {
-  margin-top: 15px;
+  margin-top: 30px;
 }
 
 .p-dialog .p-dialog-content {
   background: #3a607d;
   color: #4b5563;
   padding: 0 1.5rem 2rem 1.5rem;
+}
+
+.p-dialog .p-dialog-header-icon {
+  color: white;
+}
+
+.p-dialog .p-dialog-header-icon:hover {
+  color: #ff0000;
 }
 
 .p-dialog-footer {
@@ -323,7 +331,7 @@ body {
 }
 
 .buttonImageAddDelete {
-  color: white;
+  color: aqua;
 }
 
 .contenedorFileUpload {
@@ -341,4 +349,39 @@ body {
 
 .p-clickable {
   display: none !important;
+}
+
+.p-dataview-content > .p-grid > div {
+  background-color: #5894b0;
+}
+
+.contenedorInfoUsuarioTarjetas {
+  background-color: #5894b0;
+  box-shadow: none;
+}
+
+.confirmDialogEliminarUsuario .p-dialog-header {
+  background-color: #1e435f;
+  padding: 10px;
+}
+
+.confirmDialogEliminarUsuario .p-dialog-content {
+  background-color: #8f3434;
+  color: white;
+  min-height: 150px;
+  padding-bottom: 0px;
+}
+
+.confirmDialogEliminarUsuario .p-dialog-header-icon {
+  color: white;
+}
+
+.confirmDialogEliminarUsuario .p-dialog-header-icon:hover {
+  color: #ff0000;
+}
+
+button:focus,
+button:focus-visible {
+  box-shadow: none;
+  border: none;
 }

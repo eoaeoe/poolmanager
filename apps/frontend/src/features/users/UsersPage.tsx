@@ -100,6 +100,7 @@ export default function UsersPage() {
 
   const handleDelete = (user: UserItem) => {
     confirmDialog({
+      className: "confirmDialogEliminarUsuario",
       message: `¿Seguro que quieres eliminar a ${user.name}?`,
       header: "Confirmar eliminación",
       icon: "pi pi-exclamation-triangle",
@@ -182,8 +183,8 @@ export default function UsersPage() {
         </div>
       </div>
 
-      <Card>
-        {isMobile ? (
+      {isMobile ? (
+        <Card className="contenedorInfoUsuarioTarjetas">
           <UsersCardsView
             users={users}
             loading={loading}
@@ -194,7 +195,9 @@ export default function UsersPage() {
             onEdit={openEditDialog}
             onDelete={handleDelete}
           />
-        ) : (
+        </Card>
+      ) : (
+        <Card>
           <UsersTableView
             users={users}
             totalRecords={totalRecords}
@@ -207,8 +210,8 @@ export default function UsersPage() {
             onEdit={openEditDialog}
             onDelete={handleDelete}
           />
-        )}
-      </Card>
+        </Card>
+      )}
 
       <Dialog
         visible={dialogVisible}
