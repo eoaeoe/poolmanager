@@ -5,38 +5,39 @@ import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
 import { InputText } from "primereact/inputtext";
-import { Password } from "primereact/password";
+import { InputSwitch } from "primereact/inputswitch";
 import { Toast } from "primereact/toast";
-import defaultUserImage from "../../assets/default-user.jpg";
+import { FileUpload } from "primereact/fileupload";
 import type {
   DataTablePageEvent,
   DataTableSortEvent,
 } from "primereact/datatable";
-import { IconSearch, IconUsers } from "@tabler/icons-react";
+import {
+  IconSearch,
+  IconPool,
+  IconDroplet,
+  IconEngine,
+} from "@tabler/icons-react";
 
-import { useUsers } from "./useUsers";
-import type { UserItem } from "./users.types";
+import defaultPoolImage from "../../assets/default-pool.jpg";
 import { useIsMobile } from "../../hooks/useIsMobile";
-import UsersTableView from "./UsersTableView";
-import UsersCardsView from "./UsersCardsView";
-import { FileUpload } from "primereact/fileupload";
+import { poolZoneOptions } from "./pools.constants";
+import { usePools } from "./usePools";
+import type { PoolItem } from "./pools.types";
+import PoolsTableView from "./PoolsTableView";
+import PoolsCardsView from "./PoolsCardsView";
 
-const roleOptions = [
-  { label: "Empleado", value: "employee" },
-  { label: "Jefe", value: "boss" },
-];
-
-export default function UsersPage() {
+export default function PoolsPage() {
   const toast = useRef<Toast>(null);
   const isMobile = useIsMobile();
 
   const {
-    users,
+    pools,
     totalRecords,
     loading,
     saving,
     dialogVisible,
-    editingUser,
+    editingPool,
     pagination,
     search,
     sort,
@@ -46,11 +47,11 @@ export default function UsersPage() {
     openCreateDialog,
     openEditDialog,
     closeDialog,
-    updateEditingUser,
-    saveUser,
-    deleteUser,
-    removeUserImage,
-  } = useUsers();
+    updateEditingPool,
+    savePool,
+    deletePool,
+    removePoolImage,
+  } = usePools();
 
   const onPageChange = (event: DataTablePageEvent) => {
     setPage(event.first, event.rows);
@@ -62,64 +63,55 @@ export default function UsersPage() {
 
   const handleSave = async () => {
     try {
-      if (!editingUser.name || !editingUser.email || !editingUser.role) {
+      if (!editingPool.name || !editingPool.zoneCode) {
         toast.current?.show({
           severity: "warn",
           summary: "Validación",
-          detail: "Completa los campos obligatorios",
+          detail: "Nombre y zona son obligatorios",
         });
         return;
       }
 
-      if (!editingUser.id && !editingUser.password) {
-        toast.current?.show({
-          severity: "warn",
-          summary: "Validación",
-          detail: "La contraseña es obligatoria al crear",
-        });
-        return;
-      }
-
-      await saveUser();
+      await savePool();
 
       toast.current?.show({
         severity: "success",
         summary: "Guardado",
-        detail: editingUser.id
-          ? "Usuario actualizado correctamente"
-          : "Usuario creado correctamente",
+        detail: editingPool.id
+          ? "Piscina actualizada correctamente"
+          : "Piscina creada correctamente",
       });
     } catch {
       toast.current?.show({
         severity: "error",
         summary: "Error",
-        detail: "No se pudo guardar el usuario",
+        detail: "No se pudo guardar la piscina",
       });
     }
   };
 
-  const handleDelete = (user: UserItem) => {
+  const handleDelete = (pool: PoolItem) => {
     confirmDialog({
-      className: "confirmDialogEliminarUsuario",
-      message: `¿Seguro que quieres eliminar a ${user.name}?`,
+      className: "confirmDialogEliminarPiscina",
+      message: `¿Seguro que quieres eliminar la piscina ${pool.name}?`,
       header: "Confirmar eliminación",
       icon: "pi pi-exclamation-triangle",
       acceptLabel: "Eliminar",
       rejectLabel: "Cancelar",
       accept: async () => {
         try {
-          await deleteUser(user.id);
+          await deletePool(pool.id);
 
           toast.current?.show({
             severity: "success",
-            summary: "Eliminado",
-            detail: "Usuario eliminado correctamente",
+            summary: "Eliminada",
+            detail: "Piscina eliminada correctamente",
           });
         } catch {
           toast.current?.show({
             severity: "error",
             summary: "Error",
-            detail: "No se pudo eliminar el usuario",
+            detail: "No se pudo eliminar la piscina",
           });
         }
       },
@@ -144,17 +136,18 @@ export default function UsersPage() {
     icon: "pi pi-fw pi-images",
     iconOnly: true,
     className:
-      "custom-choose-btn p-button-rounded  p-button-text p-button-raised",
+      "custom-choose-btn p-button-rounded p-button-text p-button-raised",
   };
 
   return (
     <section>
       <Toast ref={toast} />
       <ConfirmDialog />
+
       <div className="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-3 mb-4">
         <div>
           <h2 className="m-0 tituloSeccion">
-            <IconUsers className="iconTabler" size={30} /> Usuarios
+            <IconPool className="iconTabler" size={30} /> Piscinas
           </h2>
         </div>
 
@@ -184,9 +177,9 @@ export default function UsersPage() {
       </div>
 
       {isMobile ? (
-        <Card className="contenedorInfoUsuarioTarjetas">
-          <UsersCardsView
-            users={users}
+        <Card className="contenedorInfoPiscinaTarjetas">
+          <PoolsCardsView
+            pools={pools}
             loading={loading}
             totalRecords={totalRecords}
             first={pagination.first}
@@ -198,8 +191,8 @@ export default function UsersPage() {
         </Card>
       ) : (
         <Card>
-          <UsersTableView
-            users={users}
+          <PoolsTableView
+            pools={pools}
             totalRecords={totalRecords}
             loading={loading}
             first={pagination.first}
@@ -215,34 +208,35 @@ export default function UsersPage() {
 
       <Dialog
         visible={dialogVisible}
-        className="DialogUser"
+        className="DialogPool"
         onHide={closeDialog}
-        header={editingUser.id ? "Editar usuario" : "Nuevo usuario"}
+        header={editingPool.id ? "Editar piscina" : "Nueva piscina"}
         footer={customDialogFooter}
         style={{
           width: "100%",
-          maxWidth: "32rem",
+          maxWidth: "40rem",
         }}
         modal
       >
-        <div className="flex flex-column gap-3 contenedorInputNuevoUsuario">
+        <div className="flex flex-column gap-3 contenedorInputNuevaPiscina">
           <div style={{ textAlign: "center" }}>
             <img
               src={
-                editingUser?.imageUrl
-                  ? `http://localhost:8080${editingUser.imageUrl}`
-                  : defaultUserImage
+                editingPool?.imageUrl
+                  ? `http://localhost:8080${editingPool.imageUrl}`
+                  : defaultPoolImage
               }
-              alt="Usuario"
+              alt="Piscina"
               style={{
-                width: "80px",
+                width: "120px",
                 height: "80px",
                 objectFit: "cover",
-                borderRadius: "50%",
+                borderRadius: "12px",
               }}
             />
           </div>
-          <div className="flex  gap-2 contenedorFileUpload">
+
+          <div className="flex gap-2 contenedorFileUpload">
             <FileUpload
               mode="basic"
               accept="image/png,image/jpeg,image/webp"
@@ -252,10 +246,10 @@ export default function UsersPage() {
               customUpload
               onSelect={(e) => {
                 const file = e.files?.[0] ?? null;
-                updateEditingUser({ image: file });
+                updateEditingPool({ image: file });
               }}
             />
-            {editingUser.imageUrl && (
+            {editingPool.imageUrl && (
               <div style={{ textAlign: "center" }}>
                 <Button
                   icon="pi pi-times"
@@ -264,73 +258,137 @@ export default function UsersPage() {
                   text
                   severity="danger"
                   className="buttonImageAddDelete"
-                  onClick={() => removeUserImage(editingUser.id || "")}
+                  onClick={() => removePoolImage(editingPool.id || "")}
                 />
               </div>
             )}
           </div>
+
           <div className="p-inputgroup flex-1">
             <span className="p-inputgroup-addon">
-              <i className="pi pi-user"></i>
+              <i className="pi pi-tablet"></i>
             </span>
             <InputText
               id="name"
               placeholder="Nombre"
               className="w-full"
-              value={editingUser.name}
-              onChange={(e) => updateEditingUser({ name: e.target.value })}
-            />
-          </div>
-          <div className="p-inputgroup flex-1">
-            <span className="p-inputgroup-addon">
-              <i className="pi pi-envelope"></i>
-            </span>
-            <InputText
-              id="email"
-              placeholder="Email"
-              className="w-full"
-              value={editingUser.email}
-              onChange={(e) => updateEditingUser({ email: e.target.value })}
-            />
-          </div>
-          <div className="p-inputgroup flex-1">
-            <span className="p-inputgroup-addon">
-              <i className="pi pi-lock"></i>
-            </span>
-            <Password
-              inputId="password"
-              placeholder="Password"
-              value={editingUser.password}
-              onChange={(e) => updateEditingUser({ password: e.target.value })}
-              toggleMask
-              feedback={false}
-              className="w-full"
-              inputClassName="w-full"
+              value={editingPool.name}
+              onChange={(e) => updateEditingPool({ name: e.target.value })}
             />
           </div>
 
           <div className="p-inputgroup flex-1">
             <span className="p-inputgroup-addon">
-              <i className="pi pi-id-card"></i>
+              <i className="pi pi-map-marker"></i>
             </span>
             <Dropdown
-              inputId="role"
+              inputId="zoneCode"
               className="w-full"
-              value={editingUser.role}
-              options={roleOptions}
-              onChange={(e) => updateEditingUser({ role: e.value })}
+              value={editingPool.zoneCode}
+              options={poolZoneOptions}
+              onChange={(e) => updateEditingPool({ zoneCode: e.value })}
+              placeholder="Zona"
             />
           </div>
 
-          {/* <div className="flex justify-content-center gap-2 pt-2">
-            <Button
-              label="Cancelar"
-              outlined
-              onClick={closeDialog}
-              disabled={saving}
+          <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+              <i className="pi pi-arrows-h"></i>
+            </span>
+            <InputText
+              id="dimensionsText"
+              placeholder="Medidas"
+              className="w-full"
+              value={editingPool.dimensionsText}
+              onChange={(e) =>
+                updateEditingPool({ dimensionsText: e.target.value })
+              }
             />
-            <Button label="Guardar" onClick={handleSave} loading={saving} />
-          </div> */}
+          </div>
+
+          <div className="p-inputgroup flex-1">
+            <span className="p-inputgroup-addon">
+              <i className="pi ">m3</i>
+            </span>
+            <InputText
+              id="cubicMeters"
+              placeholder="Metros cúbicos"
+              className="w-full"
+              value={editingPool.cubicMeters}
+              onChange={(e) =>
+                updateEditingPool({ cubicMeters: e.target.value })
+              }
+            />
+          </div>
+
+          <div className="flex align-items-center justify-content-between inputSwitchContainer">
+            <span className="p-inputgroup-addon" style={{ height: "stretch" }}>
+              <IconDroplet size={16} />
+            </span>
+            <div className="w-full flex align-items-center justify-content-center">
+              <InputSwitch
+                checked={editingPool.waterOpen}
+                onChange={(e) =>
+                  updateEditingPool({
+                    waterOpen: e.value,
+                    waterOpenAt: e.value ? editingPool.waterOpenAt : "",
+                  })
+                }
+              />
+            </div>
+          </div>
+
+          {/* {editingPool.waterOpen && (
+            <div className="p-inputgroup flex-1">
+              <span className="p-inputgroup-addon">
+                <i className="pi pi-clock"></i>
+              </span>
+              <InputText
+                id="waterOpenAt"
+                type="datetime-local"
+                className="w-full"
+                value={editingPool.waterOpenAt}
+                onChange={(e) =>
+                  updateEditingPool({ waterOpenAt: e.target.value })
+                }
+              />
+            </div>
+          )} */}
+
+          <div className="flex align-items-center justify-content-between  inputSwitchContainer">
+            <span className="p-inputgroup-addon" style={{ height: "stretch" }}>
+              <IconEngine size={16} />
+            </span>
+            <div className="w-full flex align-items-center justify-content-center">
+              <InputSwitch
+                inputId="manualPumpOn"
+                checked={editingPool.manualPumpOn}
+                onChange={(e) =>
+                  updateEditingPool({
+                    manualPumpOn: e.value,
+                    manualPumpOnAt: e.value ? editingPool.manualPumpOnAt : "",
+                  })
+                }
+              />
+            </div>
+          </div>
+
+          {/* {editingPool.manualPumpOn && (
+            <div className="p-inputgroup flex-1">
+              <span className="p-inputgroup-addon">
+                <i className="pi pi-clock"></i>
+              </span>
+              <InputText
+                id="manualPumpOnAt"
+                type="datetime-local"
+                className="w-full"
+                value={editingPool.manualPumpOnAt}
+                onChange={(e) =>
+                  updateEditingPool({ manualPumpOnAt: e.target.value })
+                }
+              />
+            </div>
+          )} */}
         </div>
       </Dialog>
     </section>

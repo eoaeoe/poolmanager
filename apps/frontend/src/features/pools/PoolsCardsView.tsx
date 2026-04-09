@@ -3,23 +3,25 @@ import { Card } from "primereact/card";
 import { DataView } from "primereact/dataview";
 import { Paginator, type PaginatorPageChangeEvent } from "primereact/paginator";
 import { InputText } from "primereact/inputtext";
-import { Dropdown } from "primereact/dropdown";
-import type { UserItem } from "./users.types";
-import defaultUserImage from "../../assets/default-user.jpg";
-
+import { InputSwitch } from "primereact/inputswitch";
+import type { PoolItem } from "./pools.types";
+import { getZoneNameByCode } from "./pools.constants";
+import defaultPoolImage from "../../assets/default-pool.jpg";
+import { IconDroplet, IconEngine } from "@tabler/icons-react";
+import { formatElapsedTime } from "./pools.utils";
 type Props = {
-  users: UserItem[];
+  pools: PoolItem[];
   loading: boolean;
   totalRecords: number;
   first: number;
   rows: number;
   onPageChange: (event: PaginatorPageChangeEvent) => void;
-  onEdit: (user: UserItem) => void;
-  onDelete: (user: UserItem) => void;
+  onEdit: (pool: PoolItem) => void;
+  onDelete: (pool: PoolItem) => void;
 };
 
-export default function UsersCardsView({
-  users,
+export default function PoolsCardsView({
+  pools,
   loading,
   totalRecords,
   first,
@@ -28,12 +30,7 @@ export default function UsersCardsView({
   onEdit,
   onDelete,
 }: Readonly<Props>) {
-  const roleOptions = [
-    { label: "Empleado", value: "employee" },
-    { label: "Jefe", value: "boss" },
-  ];
-
-  const itemTemplate = (user: UserItem) => {
+  const itemTemplate = (pool: PoolItem) => {
     return (
       <div className="col-12">
         <Card className="mb-4">
@@ -41,69 +38,109 @@ export default function UsersCardsView({
             <div style={{ textAlign: "center" }}>
               <img
                 src={
-                  user.imageUrl
-                    ? `http://localhost:8080${user.imageUrl}`
-                    : defaultUserImage
+                  pool.imageUrl
+                    ? `http://localhost:8080${pool.imageUrl}`
+                    : defaultPoolImage
                 }
-                alt={user.name}
+                alt={pool.name}
                 style={{
-                  width: "80px",
+                  width: "120px",
                   height: "80px",
                   objectFit: "cover",
-                  borderRadius: "50%",
+                  borderRadius: "12px",
                 }}
               />
             </div>
+
             <div className="p-inputgroup flex-1">
               <span className="p-inputgroup-addon">
-                <i className="pi pi-user"></i>
+                <i className="pi pi-home"></i>
               </span>
               <InputText
                 id="name"
                 placeholder="Nombre"
                 className="w-full"
-                value={user.name}
+                value={pool.name}
                 disabled
               />
             </div>
 
             <div className="p-inputgroup flex-1">
               <span className="p-inputgroup-addon">
-                <i className="pi pi-envelope"></i>
+                <i className="pi pi-map-marker"></i>
               </span>
               <InputText
-                id="email"
-                placeholder="Email"
+                id="zone"
+                placeholder="Zona"
                 className="w-full"
-                value={user.email}
+                value={getZoneNameByCode(pool.zoneCode)}
                 disabled
               />
             </div>
 
+            <div className="flex align-items-center justify-content-between inputSwitchContainerCardView">
+              <span
+                className="p-inputgroup-addon"
+                style={{ height: "stretch" }}
+              >
+                <IconDroplet size={16} />
+              </span>
+              <div className="w-full flex align-items-center justify-content-center">
+                <InputSwitch checked={pool.waterOpen} disabled />
+              </div>
+            </div>
+
             <div className="p-inputgroup flex-1">
               <span className="p-inputgroup-addon">
-                <i className="pi pi-id-card"></i>
+                <i className="pi pi-clock"></i>
               </span>
-              <Dropdown
-                inputId="role"
+              <InputText
+                id="waterOpenAt"
+                placeholder="Desde"
                 className="w-full"
-                value={user.role}
-                options={roleOptions}
+                value={formatElapsedTime(pool.waterOpenAt)}
                 disabled
               />
             </div>
+
+            <div className="flex align-items-center justify-content-between inputSwitchContainerCardView">
+              <span
+                className="p-inputgroup-addon"
+                style={{ height: "stretch" }}
+              >
+                <IconEngine size={16} />
+              </span>
+              <div className="w-full flex align-items-center justify-content-center">
+                <InputSwitch checked={pool.manualPumpOn} disabled />
+              </div>
+            </div>
+
             <div className="p-inputgroup flex-1">
+              <span className="p-inputgroup-addon">
+                <i className="pi pi-clock"></i>
+              </span>
+              <InputText
+                id="manualPumpOnAt"
+                placeholder="Desde"
+                className="w-full"
+                value={formatElapsedTime(pool.manualPumpOnAt)}
+                disabled
+              />
+            </div>
+
+            {/* <div className="p-inputgroup flex-1">
               <span className="p-inputgroup-addon">
                 <i className="pi pi-calendar"></i>
               </span>
               <InputText
-                id="fechaAlta"
+                id="createdAt"
                 placeholder="Fecha de alta"
                 className="w-full"
-                value={new Date(user.createdAt).toLocaleDateString()}
+                value={new Date(pool.createdAt).toLocaleDateString()}
                 disabled
               />
-            </div>
+            </div> */}
+
             <div className="flex gap-2 pt-2 justify-content-center">
               <Button
                 icon="pi pi-pencil"
@@ -111,7 +148,7 @@ export default function UsersCardsView({
                 rounded
                 text
                 size="small"
-                onClick={() => onEdit(user)}
+                onClick={() => onEdit(pool)}
               />
               <Button
                 icon="pi pi-trash"
@@ -121,7 +158,7 @@ export default function UsersCardsView({
                 severity="danger"
                 outlined
                 size="small"
-                onClick={() => onDelete(user)}
+                onClick={() => onDelete(pool)}
               />
             </div>
           </div>
@@ -133,11 +170,11 @@ export default function UsersCardsView({
   return (
     <div className="flex flex-column gap-3">
       <DataView
-        value={users}
+        value={pools}
         layout="list"
         itemTemplate={itemTemplate}
         loading={loading}
-        emptyMessage="No hay usuarios disponibles"
+        emptyMessage="No hay piscinas disponibles"
       />
 
       <Paginator
