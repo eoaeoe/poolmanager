@@ -4,7 +4,7 @@ import { MainLayout } from "../layouts/MainLayout";
 import LoginPage from "../pages/LoginPage";
 import DashboardPage from "../pages/DashboardPage";
 import PoolsPage from "../features/pools/PoolsPage";
-import MaintenancePage from "../pages/MaintenancePage";
+import WorksPage from "../features/works/WorksPage";
 import UsersPage from "../features/users/UsersPage";
 import NotFoundPage from "../pages/NotFoundPage";
 
@@ -17,7 +17,7 @@ export function AppRouter() {
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
             <Route path="/" element={<DashboardPage />} />
-            <Route path="/maintenance" element={<MaintenancePage />} />
+            <Route path="/work" element={<WorksPage />} />
           </Route>
         </Route>
 
@@ -25,6 +25,7 @@ export function AppRouter() {
           <Route element={<MainLayout />}>
             <Route path="/users" element={<UsersPage />} />
             <Route path="/pools" element={<PoolsPage />} />
+            <Route path="/work" element={<WorksPage />} />
           </Route>
         </Route>
 

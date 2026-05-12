@@ -10,6 +10,8 @@ import {
 import { useDebounce } from "../../hooks/useDebounce";
 import type { UserFormValues, UserItem, UsersPageState } from "./users.types";
 import { emptyUserForm } from "./users.types";
+import { getWorksByUserApi } from "../works/works.api";
+import type { Work } from "../works/works.types";
 
 export function useUsers() {
   const [state, setState] = useState<UsersPageState>({
@@ -39,6 +41,19 @@ export function useUsers() {
   }, [state.pagination.first, state.pagination.rows]);
 
   const sortOrderText: "ASC" | "DESC" = state.sort.order === 1 ? "ASC" : "DESC";
+  const [userWorks, setUserWorks] = useState<Work[]>([]);
+  const [loadingUserWorks, setLoadingUserWorks] = useState(false);
+
+  async function loadUserWorks(userId: string) {
+    setLoadingUserWorks(true);
+
+    try {
+      const works = await getWorksByUserApi(userId);
+      setUserWorks(works);
+    } finally {
+      setLoadingUserWorks(false);
+    }
+  }
 
   const loadUsers = useCallback(
     async (
@@ -182,6 +197,7 @@ export function useUsers() {
   };
 
   const openCreateDialog = () => {
+    setUserWorks([]);
     setState((prev) => ({
       ...prev,
       dialogVisible: true,
@@ -190,6 +206,7 @@ export function useUsers() {
   };
 
   const openEditDialog = (user: UserItem) => {
+    setUserWorks([]);
     setState((prev) => ({
       ...prev,
       dialogVisible: true,
@@ -202,9 +219,11 @@ export function useUsers() {
         imageUrl: user.imageUrl,
       },
     }));
+    void loadUserWorks(user.id);
   };
 
   const closeDialog = () => {
+    setUserWorks([]);
     setState((prev) => ({
       ...prev,
       dialogVisible: false,
@@ -231,6 +250,7 @@ export function useUsers() {
       lastQueryRef.current = "";
       await loadUsers();
 
+      setUserWorks([]);
       setState((prev) => ({
         ...prev,
         saving: false,
@@ -320,5 +340,7 @@ export function useUsers() {
     saveUser,
     deleteUser,
     removeUserImage,
+    userWorks,
+    loadingUserWorks,
   };
 }

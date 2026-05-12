@@ -68,3 +68,8 @@ export type PoolsPageState = {
   search: string;
   sort: PoolsSort;
 };
+
+export interface PoolOption {
+  id: string;
+  name: string;
+}

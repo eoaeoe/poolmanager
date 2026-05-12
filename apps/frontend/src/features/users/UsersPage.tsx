@@ -20,6 +20,7 @@ import { useIsMobile } from "../../hooks/useIsMobile";
 import UsersTableView from "./UsersTableView";
 import UsersCardsView from "./UsersCardsView";
 import { FileUpload } from "primereact/fileupload";
+import { WorksHistoryTable } from "../works/worksHistoryTable";
 
 const roleOptions = [
   { label: "Empleado", value: "employee" },
@@ -29,7 +30,6 @@ const roleOptions = [
 export default function UsersPage() {
   const toast = useRef<Toast>(null);
   const isMobile = useIsMobile();
-
   const {
     users,
     totalRecords,
@@ -50,6 +50,8 @@ export default function UsersPage() {
     saveUser,
     deleteUser,
     removeUserImage,
+    userWorks,
+    loadingUserWorks,
   } = useUsers();
 
   const onPageChange = (event: DataTablePageEvent) => {
@@ -221,7 +223,7 @@ export default function UsersPage() {
         footer={customDialogFooter}
         style={{
           width: "100%",
-          maxWidth: "32rem",
+          maxWidth: editingUser.id ? "75rem" : "32rem",
         }}
         modal
       >
@@ -332,6 +334,17 @@ export default function UsersPage() {
             <Button label="Guardar" onClick={handleSave} loading={saving} />
           </div> */}
         </div>
+        {editingUser.id && (
+          <div className="mt-4">
+            <h3 className="mb-3">Histórico de mantenimientos</h3>
+
+            <WorksHistoryTable
+              works={userWorks}
+              showPool
+              loading={loadingUserWorks}
+            />
+          </div>
+        )}
       </Dialog>
     </section>
   );

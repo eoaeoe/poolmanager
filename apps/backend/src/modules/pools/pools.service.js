@@ -71,6 +71,13 @@ export async function findPoolById(id) {
   return Pool.findByPk(id);
 }
 
+export async function getAllPools() {
+  return await Pool.findAll({
+    attributes: ["id", "name"],
+    order: [["name", "ASC"]],
+  });
+}
+
 export async function findPoolByName(name) {
   return Pool.findOne({
     where: { name },

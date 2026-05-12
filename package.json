@@ -12,5 +12,8 @@
     "dev:back": "npm run dev -w apps/backend",
     "build:front": "npm run build -w apps/frontend",
     "start:back": "npm run start -w apps/backend"
+  },
+  "dependencies": {
+    "@tabler/icons-react": "^3.44.0"
   }
 }

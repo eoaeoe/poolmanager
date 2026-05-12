@@ -26,6 +26,7 @@ import { usePools } from "./usePools";
 import type { PoolItem } from "./pools.types";
 import PoolsTableView from "./PoolsTableView";
 import PoolsCardsView from "./PoolsCardsView";
+import { WorksHistoryTable } from "../works/worksHistoryTable";
 
 export default function PoolsPage() {
   const toast = useRef<Toast>(null);
@@ -51,6 +52,8 @@ export default function PoolsPage() {
     savePool,
     deletePool,
     removePoolImage,
+    poolWorks,
+    loadingPoolWorks,
   } = usePools();
 
   const onPageChange = (event: DataTablePageEvent) => {
@@ -214,7 +217,7 @@ export default function PoolsPage() {
         footer={customDialogFooter}
         style={{
           width: "100%",
-          maxWidth: "40rem",
+          maxWidth: editingPool.id ? "75rem" : "40rem",
         }}
         modal
       >
@@ -390,6 +393,17 @@ export default function PoolsPage() {
             </div>
           )} */}
         </div>
+        {editingPool.id && (
+          <div className="mt-4">
+            <h3 className="mb-3">Histórico de mantenimientos</h3>
+
+            <WorksHistoryTable
+              works={poolWorks}
+              showUser
+              loading={loadingPoolWorks}
+            />
+          </div>
+        )}
       </Dialog>
     </section>
   );

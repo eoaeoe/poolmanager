@@ -11,6 +11,8 @@ import {
 import { useDebounce } from "../../hooks/useDebounce";
 import type { PoolFormValues, PoolItem, PoolsPageState } from "./pools.types";
 import { emptyPoolForm } from "./pools.types";
+import { getWorksByPoolApi } from "../works/works.api";
+import type { Work } from "../works/works.types";
 
 export function usePools() {
   const [state, setState] = useState<PoolsPageState>({
@@ -40,6 +42,19 @@ export function usePools() {
   }, [state.pagination.first, state.pagination.rows]);
 
   const sortOrderText: "ASC" | "DESC" = state.sort.order === 1 ? "ASC" : "DESC";
+  const [poolWorks, setPoolWorks] = useState<Work[]>([]);
+  const [loadingPoolWorks, setLoadingPoolWorks] = useState(false);
+
+  async function loadPoolWorks(poolId: string) {
+    setLoadingPoolWorks(true);
+
+    try {
+      const works = await getWorksByPoolApi(poolId);
+      setPoolWorks(works);
+    } finally {
+      setLoadingPoolWorks(false);
+    }
+  }
 
   const loadPools = useCallback(
     async (
@@ -183,6 +198,7 @@ export function usePools() {
   };
 
   const openCreateDialog = () => {
+    setPoolWorks([]);
     setState((prev) => ({
       ...prev,
       dialogVisible: true,
@@ -191,6 +207,7 @@ export function usePools() {
   };
 
   const openEditDialog = (pool: PoolItem) => {
+    setPoolWorks([]);
     setState((prev) => ({
       ...prev,
       dialogVisible: true,
@@ -208,9 +225,11 @@ export function usePools() {
         image: null,
       },
     }));
+    void loadPoolWorks(pool.id);
   };
 
   const closeDialog = () => {
+    setPoolWorks([]);
     setState((prev) => ({
       ...prev,
       dialogVisible: false,
@@ -326,5 +345,7 @@ export function usePools() {
     savePool,
     deletePool,
     removePoolImage,
+    poolWorks,
+    loadingPoolWorks,
   };
 }

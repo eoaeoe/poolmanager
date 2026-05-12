@@ -259,12 +259,6 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
-/* @media (max-width: 768px) {
-  html {
-    font-size: 13px;
-  }
-} */
-
 .p-dropdown .p-dropdown-label {
   font-size: 0.9rem;
   font-family: "Roboto", sans-serif;
@@ -419,4 +413,52 @@ button:focus-visible {
 
 .p-inputswitch.p-highlight .p-inputswitch-slider {
   background-color: aqua;
+}
+
+#botonIniciarTrabajo > span {
+  background-color: #1e435f;
+  color: aqua;
+  border: none;
+  border-radius: 0px 6px 6px 0px;
+  font-size: 30px;
+  margin-left: 5px;
+}
+
+#botonPararTrabajo > span {
+  background-color: #8f3434;
+  color: white;
+  border: none;
+  border-radius: 6px 6px 6px 6px;
+  font-size: 30px;
+}
+
+#botonIniciarTrabajo > .p-button-label {
+  display: none;
+}
+
+#cardMantenimientoCurso .p-card-body {
+  padding: 0px;
+}
+
+#cardMantenimientoCurso .p-card-title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  background-color: #004565;
+  color: aqua;
+  border-radius: 6px 6px 0px 0px;
+  padding: 25px;
+}
+
+#cardMantenimientoCurso .p-card-content {
+  padding: 25px !important;
+  margin: 0px;
+}
+
+#cardMantenimientoCurso .p-disabled {
+  opacity: 1;
+}
+
+.p-dialog-header {
+  background: #1e435f;
 }

@@ -3,7 +3,7 @@ import "./AppSidebar.css";
 import {
   IconDashboard,
   IconPool,
-  IconTool,
+  IconFlood,
   IconUsers,
 } from "@tabler/icons-react";
 import { useAuth } from "../../features/auth/useAuth";
@@ -19,9 +19,9 @@ export function AppSidebar({ mobile = false, onNavigate }: Props) {
   const commonItems = [
     { to: "/", label: "Dashboard", icon: <IconDashboard size={20} /> },
     {
-      to: "/maintenance",
-      label: "Mantenimientos",
-      icon: <IconTool size={20} />,
+      to: "/work",
+      label: "Mantenimiento",
+      icon: <IconFlood size={20} />,
     },
   ];
 

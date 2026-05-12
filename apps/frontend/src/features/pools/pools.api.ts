@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import type { PoolFormValues, PoolsResponse } from "./pools.types";
+import type { PoolFormValues, PoolsResponse, PoolOption } from "./pools.types";
 
 type GetPoolsParams = {
   page: number;
@@ -9,6 +9,11 @@ type GetPoolsParams = {
   sortOrder: "ASC" | "DESC";
   signal?: AbortSignal;
 };
+
+export async function getAllPoolsApi(): Promise<PoolOption[]> {
+  const response = await api.get<PoolOption[]>("/pools/all");
+  return response.data;
+}
 
 export async function getPoolsApi(params: GetPoolsParams) {
   const { page, limit, search, sortField, sortOrder, signal } = params;

@@ -7,6 +7,7 @@ import {
   findPoolsPaginated,
   removePoolImage,
   updatePool,
+  getAllPools,
 } from "./pools.service.js";
 
 function parseBoolean(value) {
@@ -161,6 +162,15 @@ export async function createPoolController(req, res) {
     return res.status(500).json({
       message: "No se pudo crear la piscina",
     });
+  }
+}
+
+export async function getAllPoolsController(req, res, next) {
+  try {
+    const pools = await getAllPools();
+    return res.status(200).json(pools);
+  } catch (error) {
+    next(error);
   }
 }
 
