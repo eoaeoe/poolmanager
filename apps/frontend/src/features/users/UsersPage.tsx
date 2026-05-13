@@ -337,7 +337,9 @@ export default function UsersPage() {
         </div>
         {editingUser.id && (
           <div className="mt-4">
-            <h3 className="mb-3">Histórico de mantenimientos</h3>
+            <h3 className="mb-3" style={{ color: "aqua" }}>
+              Histórico de mantenimientos
+            </h3>
 
             <WorksHistoryTable
               works={userWorks}
