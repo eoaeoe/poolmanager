@@ -9,13 +9,18 @@ export function MainLayout() {
   const [mobileSidebarVisible, setMobileSidebarVisible] = useState(false);
 
   return (
-    <div className="min-h-screen flex">
-      {/* Sidebar fija en desktop */}
+    <div
+      className="min-h-screen flex"
+      style={{
+        width: "100%",
+        maxWidth: "100vw",
+        overflowX: "hidden",
+      }}
+    >
       <div className="hidden lg:block" style={{ background: "#004565" }}>
         <AppSidebar mobile={false} onNavigate={() => {}} />
       </div>
 
-      {/* Sidebar móvil */}
       <Sidebar
         style={{ background: "#004565" }}
         visible={mobileSidebarVisible}
@@ -27,13 +32,25 @@ export function MainLayout() {
         <AppSidebar mobile onNavigate={() => setMobileSidebarVisible(false)} />
       </Sidebar>
 
-      {/* Área principal */}
-      <div className="flex-1 min-h-screen flex flex-column containerAppTopBar">
+      <div
+        className="flex-1 min-h-screen flex flex-column containerAppTopBar"
+        style={{
+          minWidth: 0,
+          width: "100%",
+          maxWidth: "100%",
+        }}
+      >
         <AppTopbar onMenuClick={() => setMobileSidebarVisible(true)} />
 
         <main
-          className=" flex-1 overflow-auto"
-          style={{ background: "#1f2937" }}
+          className="flex-1 overflow-auto"
+          style={{
+            background: "#1f2937",
+            width: "100%",
+            maxWidth: "100%",
+            minWidth: 0,
+            overflowX: "hidden",
+          }}
         >
           <Outlet />
         </main>
