@@ -16,8 +16,7 @@ type Props = Readonly<{
 export function AppSidebar({ mobile = false, onNavigate }: Props) {
   const { user } = useAuth();
 
-  const commonItems = [
-    { to: "/", label: "Dashboard", icon: <IconDashboard size={20} /> },
+  const employeeItems = [
     {
       to: "/work",
       label: "Mantenimiento",
@@ -28,12 +27,13 @@ export function AppSidebar({ mobile = false, onNavigate }: Props) {
   const bossItems =
     user?.role === "boss"
       ? [
+          { to: "/", label: "Dashboard", icon: <IconDashboard size={20} /> },
           { to: "/pools", label: "Piscinas", icon: <IconPool size={20} /> },
           { to: "/users", label: "Usuarios", icon: <IconUsers size={20} /> },
         ]
       : [];
 
-  const items = [...commonItems, ...bossItems];
+  const items = [...bossItems, ...employeeItems];
 
   return (
     <aside

@@ -1,6 +1,7 @@
 import { DataTable } from "primereact/datatable";
 import { Column } from "primereact/column";
 import type { Work } from "./works.types";
+import { formatWorkDuration } from "./works.utils";
 
 interface WorksHistoryTableProps {
   readonly works: Work[];
@@ -50,6 +51,13 @@ export function WorksHistoryTable({
           rowData.finishedAt
             ? new Date(rowData.finishedAt).toLocaleString()
             : "-"
+        }
+      />
+
+      <Column
+        header="Duración"
+        body={(rowData: Work) =>
+          formatWorkDuration(rowData.startedAt, rowData.finishedAt)
         }
       />
 

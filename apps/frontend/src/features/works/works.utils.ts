@@ -32,3 +32,21 @@ export function isFinishWorkDisabled(
 export function formatWorkStartDate(work: Work): string {
   return new Date(work.startedAt).toLocaleString();
 }
+
+export function formatWorkDuration(
+  startedAt: string,
+  finishedAt: string | null,
+): string {
+  if (!finishedAt) return "-";
+
+  const start = new Date(startedAt).getTime();
+  const end = new Date(finishedAt).getTime();
+
+  const diffMinutes = Math.round((end - start) / 60000);
+
+  if (Number.isNaN(diffMinutes) || diffMinutes < 0) {
+    return "-";
+  }
+
+  return `${diffMinutes} min`;
+}

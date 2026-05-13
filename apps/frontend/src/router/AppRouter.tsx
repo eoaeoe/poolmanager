@@ -7,6 +7,17 @@ import PoolsPage from "../features/pools/PoolsPage";
 import WorksPage from "../features/works/WorksPage";
 import UsersPage from "../features/users/UsersPage";
 import NotFoundPage from "../pages/NotFoundPage";
+import { useAuth } from "../features/auth/useAuth";
+
+function HomeRedirect() {
+  const { user } = useAuth();
+
+  if (user?.role === "employee") {
+    return <Navigate to="/work" replace />;
+  }
+
+  return <DashboardPage />;
+}
 
 export function AppRouter() {
   return (
@@ -16,7 +27,7 @@ export function AppRouter() {
 
         <Route element={<ProtectedRoute />}>
           <Route element={<MainLayout />}>
-            <Route path="/" element={<DashboardPage />} />
+            <Route path="/" element={<HomeRedirect />} />
             <Route path="/work" element={<WorksPage />} />
           </Route>
         </Route>
