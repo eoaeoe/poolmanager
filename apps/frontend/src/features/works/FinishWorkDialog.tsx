@@ -1,7 +1,12 @@
 import { Button } from "primereact/button";
 import { Dialog } from "primereact/dialog";
 import { Dropdown } from "primereact/dropdown";
-import { IconArrowsVertical, IconDroplet } from "@tabler/icons-react";
+import {
+  IconArrowsVertical,
+  IconDroplet,
+  IconRipple,
+  IconEngine,
+} from "@tabler/icons-react";
 import { InputTextarea } from "primereact/inputtextarea";
 import {
   LEVEL_COLOR_PRESETS,
@@ -157,7 +162,7 @@ export function FinishWorkDialog({
           <div className="col-12 md:col-12" style={{ marginTop: "1.5rem" }}>
             <div className="p-inputgroup flex-1">
               <span className="p-inputgroup-addon">
-                <IconDroplet size={18} />
+                <IconRipple size={18} />
               </span>
               <Dropdown
                 id="finish-work-water-appearance"
@@ -190,41 +195,49 @@ export function FinishWorkDialog({
             </div>
           </div>
 
-          <div className="col-12 md:col-12">
-            <label htmlFor="finish-work-water-open" className="block mb-2">
-              ¿Agua abierta?
-            </label>
-            <Dropdown
-              id="finish-work-water-open"
-              value={value.waterOpen}
-              options={[...YES_NO_OPTIONS]}
-              optionLabel="name"
-              optionValue="code"
-              placeholder="Selecciona una opción"
-              className="w-full"
-              onChange={(e) => updateField("waterOpen", e.value)}
-            />
+          <div className="col-12 md:col-12" style={{ marginTop: "1.5rem" }}>
+            <div className="p-inputgroup flex-1">
+              <span className="p-inputgroup-addon">
+                <IconDroplet size={18} />
+              </span>
+              <Dropdown
+                id="finish-work-water-open"
+                value={value.waterOpen}
+                options={[...YES_NO_OPTIONS]}
+                optionLabel="name"
+                optionValue="code"
+                placeholder="¿Agua abierta?"
+                className="w-full"
+                onChange={(e) => updateField("waterOpen", e.value)}
+              />
+            </div>
           </div>
 
-          <div className="col-12 md:col-12">
-            <label htmlFor="finish-work-manual-pump-on" className="block mb-2">
-              ¿Bomba en manual?
-            </label>
-            <Dropdown
-              id="finish-work-manual-pump-on"
-              value={value.manualPumpOn}
-              options={[...YES_NO_OPTIONS]}
-              optionLabel="name"
-              optionValue="code"
-              placeholder="Selecciona una opción"
-              className="w-full"
-              onChange={(e) => updateField("manualPumpOn", e.value)}
-            />
+          <div className="col-12 md:col-12" style={{ marginTop: "1.5rem" }}>
+            <div className="p-inputgroup flex-1">
+              <span className="p-inputgroup-addon">
+                <IconEngine size={18} />
+              </span>
+              <Dropdown
+                id="finish-work-manual-pump-on"
+                value={value.manualPumpOn}
+                options={[...YES_NO_OPTIONS]}
+                optionLabel="name"
+                optionValue="code"
+                placeholder="¿Bomba manual encendida?"
+                className="w-full"
+                onChange={(e) => updateField("manualPumpOn", e.value)}
+              />
+            </div>
           </div>
 
           <div className="col-12">
-            <label htmlFor="finish-work-comment" className="block mb-2">
-              Comentario
+            <label
+              htmlFor="finish-work-comment"
+              className="block mb-2"
+              style={{ color: "aqua", marginTop: "15px" }}
+            >
+              Observaciones
             </label>
             <InputTextarea
               id="finish-work-comment"
