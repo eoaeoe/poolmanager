@@ -7,18 +7,18 @@ module.exports = {
     await queryInterface.bulkInsert("users", [
       {
         id: "11111111-1111-1111-1111-111111111111",
-        name: "Jefe Demo",
-        email: "boss@poolmanager.com",
-        passwordHash: bcrypt.hashSync("123456", 10),
+        name: "Antonio",
+        email: "antonio@poolmanager.com",
+        passwordHash: bcrypt.hashSync("padilla2026", 10),
         role: "boss",
         createdAt: new Date(),
         updatedAt: new Date(),
       },
       {
         id: "22222222-2222-2222-2222-222222222222",
-        name: "Empleado Demo",
-        email: "employee@poolmanager.com",
-        passwordHash: bcrypt.hashSync("123456", 10),
+        name: "Pedro",
+        email: "pedro@poolmanager.com",
+        passwordHash: bcrypt.hashSync("padilla2026", 10),
         role: "employee",
         createdAt: new Date(),
         updatedAt: new Date(),
@@ -28,7 +28,7 @@ module.exports = {
 
   async down(queryInterface) {
     await queryInterface.bulkDelete("users", {
-      email: ["boss@poolmanager.com", "employee@poolmanager.com"],
+      email: ["antonio@poolmanager.com", "pedro@poolmanager.com"],
     });
   },
 };

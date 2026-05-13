@@ -2,6 +2,7 @@ import { Button } from "primereact/button";
 import { IconMenu2 } from "@tabler/icons-react";
 import { useAuth } from "../../features/auth/useAuth";
 import defaultUserImage from "../../assets/default-user.jpg";
+import { getImageUrl } from "../../utils/imageUrl";
 
 type Props = Readonly<{
   onMenuClick: () => void;
@@ -28,7 +29,7 @@ export function AppTopbar({ onMenuClick }: Props) {
         <img
           src={
             user?.imageUrl
-              ? `http://localhost:8080${user.imageUrl}`
+              ? getImageUrl(user.imageUrl) ?? defaultUserImage
               : defaultUserImage
           }
           alt="Usuario"

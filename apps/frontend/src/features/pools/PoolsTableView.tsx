@@ -10,6 +10,7 @@ import type { PoolItem, PoolsSort } from "./pools.types";
 import { getZoneNameByCode } from "./pools.constants";
 import defaultPoolImage from "../../assets/default-pool.jpg";
 import { formatElapsedTime } from "./pools.utils";
+import { getImageUrl } from "../../utils/imageUrl";
 
 type Props = Readonly<{
   pools: PoolItem[];
@@ -82,7 +83,7 @@ export default function PoolsTableView({
             <img
               src={
                 rowData.imageUrl
-                  ? `http://localhost:8080${rowData.imageUrl}`
+                  ? getImageUrl(rowData.imageUrl) ?? defaultPoolImage
                   : defaultPoolImage
               }
               alt=""

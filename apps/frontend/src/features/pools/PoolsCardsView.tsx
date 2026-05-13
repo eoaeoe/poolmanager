@@ -9,6 +9,7 @@ import { getZoneNameByCode } from "./pools.constants";
 import defaultPoolImage from "../../assets/default-pool.jpg";
 import { IconDroplet, IconEngine } from "@tabler/icons-react";
 import { formatElapsedTime } from "./pools.utils";
+import { getImageUrl } from "../../utils/imageUrl";
 type Props = {
   pools: PoolItem[];
   loading: boolean;
@@ -39,7 +40,7 @@ export default function PoolsCardsView({
               <img
                 src={
                   pool.imageUrl
-                    ? `http://localhost:8080${pool.imageUrl}`
+                    ? getImageUrl(pool.imageUrl) ?? defaultPoolImage
                     : defaultPoolImage
                 }
                 alt={pool.name}

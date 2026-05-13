@@ -7,6 +7,7 @@ import {
 } from "primereact/datatable";
 import type { UserItem, UsersSort } from "./users.types";
 import defaultUserImage from "../../assets/default-user.jpg";
+import { getImageUrl } from "../../utils/imageUrl";
 
 type Props = Readonly<{
   users: UserItem[];
@@ -79,7 +80,7 @@ export default function UsersTableView({
             <img
               src={
                 rowData.imageUrl
-                  ? `http://localhost:8080${rowData.imageUrl}`
+                  ? getImageUrl(rowData.imageUrl) ?? defaultUserImage
                   : defaultUserImage
               }
               alt=""

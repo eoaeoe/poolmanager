@@ -13,7 +13,7 @@ import type {
   DataTableSortEvent,
 } from "primereact/datatable";
 import { IconSearch, IconUsers } from "@tabler/icons-react";
-
+import { getImageUrl } from "../../utils/imageUrl";
 import { useUsers } from "./useUsers";
 import type { UserItem } from "./users.types";
 import { useIsMobile } from "../../hooks/useIsMobile";
@@ -232,7 +232,7 @@ export default function UsersPage() {
             <img
               src={
                 editingUser?.imageUrl
-                  ? `http://localhost:8080${editingUser.imageUrl}`
+                  ? getImageUrl(editingUser.imageUrl) ?? defaultUserImage
                   : defaultUserImage
               }
               alt="Usuario"

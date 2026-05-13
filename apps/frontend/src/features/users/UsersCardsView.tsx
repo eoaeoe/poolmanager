@@ -6,6 +6,7 @@ import { InputText } from "primereact/inputtext";
 import { Dropdown } from "primereact/dropdown";
 import type { UserItem } from "./users.types";
 import defaultUserImage from "../../assets/default-user.jpg";
+import { getImageUrl } from "../../utils/imageUrl";
 
 type Props = {
   users: UserItem[];
@@ -42,7 +43,7 @@ export default function UsersCardsView({
               <img
                 src={
                   user.imageUrl
-                    ? `http://localhost:8080${user.imageUrl}`
+                    ? getImageUrl(user.imageUrl) ?? defaultUserImage
                     : defaultUserImage
                 }
                 alt={user.name}

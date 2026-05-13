@@ -18,7 +18,7 @@ import {
   IconDroplet,
   IconEngine,
 } from "@tabler/icons-react";
-
+import { getImageUrl } from "../../utils/imageUrl";
 import defaultPoolImage from "../../assets/default-pool.jpg";
 import { useIsMobile } from "../../hooks/useIsMobile";
 import { poolZoneOptions } from "./pools.constants";
@@ -226,7 +226,7 @@ export default function PoolsPage() {
             <img
               src={
                 editingPool?.imageUrl
-                  ? `http://localhost:8080${editingPool.imageUrl}`
+                  ? getImageUrl(editingPool.imageUrl) ?? defaultPoolImage
                   : defaultPoolImage
               }
               alt="Piscina"
