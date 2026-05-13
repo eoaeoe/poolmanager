@@ -213,7 +213,11 @@ export default function PoolsPage() {
         blockScroll
         visible={dialogVisible}
         className="DialogPool"
-        onHide={closeDialog}
+        onHide={() => {
+          document.body.style.overflow = "";
+          document.body.style.paddingRight = "";
+          closeDialog();
+        }}
         header={editingPool.id ? "Editar piscina" : "Nueva piscina"}
         footer={customDialogFooter}
         style={{

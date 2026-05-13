@@ -224,6 +224,8 @@ export function useUsers() {
 
   const closeDialog = () => {
     setUserWorks([]);
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
     setState((prev) => ({
       ...prev,
       dialogVisible: false,

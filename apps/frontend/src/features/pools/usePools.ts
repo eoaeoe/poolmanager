@@ -230,6 +230,8 @@ export function usePools() {
 
   const closeDialog = () => {
     setPoolWorks([]);
+    document.body.style.overflow = "";
+    document.body.style.paddingRight = "";
     setState((prev) => ({
       ...prev,
       dialogVisible: false,

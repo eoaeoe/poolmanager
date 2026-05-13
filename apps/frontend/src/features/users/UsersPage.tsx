@@ -219,7 +219,11 @@ export default function UsersPage() {
         blockScroll
         visible={dialogVisible}
         className="DialogUser"
-        onHide={closeDialog}
+        onHide={() => {
+          document.body.style.overflow = "";
+          document.body.style.paddingRight = "";
+          closeDialog();
+        }}
         header={editingUser.id ? "Editar usuario" : "Nuevo usuario"}
         footer={customDialogFooter}
         style={{
