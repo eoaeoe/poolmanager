@@ -324,16 +324,6 @@ export default function UsersPage() {
               onChange={(e) => updateEditingUser({ role: e.value })}
             />
           </div>
-
-          {/* <div className="flex justify-content-center gap-2 pt-2">
-            <Button
-              label="Cancelar"
-              outlined
-              onClick={closeDialog}
-              disabled={saving}
-            />
-            <Button label="Guardar" onClick={handleSave} loading={saving} />
-          </div> */}
         </div>
         {editingUser.id && (
           <div className="mt-4">
