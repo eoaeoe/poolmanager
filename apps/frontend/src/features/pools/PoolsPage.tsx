@@ -210,6 +210,7 @@ export default function PoolsPage() {
       )}
 
       <Dialog
+        blockScroll
         visible={dialogVisible}
         className="DialogPool"
         onHide={closeDialog}

@@ -216,6 +216,7 @@ export default function UsersPage() {
       )}
 
       <Dialog
+        blockScroll
         visible={dialogVisible}
         className="DialogUser"
         onHide={closeDialog}
@@ -232,7 +233,7 @@ export default function UsersPage() {
             <img
               src={
                 editingUser?.imageUrl
-                  ? getImageUrl(editingUser.imageUrl) ?? defaultUserImage
+                  ? (getImageUrl(editingUser.imageUrl) ?? defaultUserImage)
                   : defaultUserImage
               }
               alt="Usuario"
