@@ -8,6 +8,7 @@ import WorksPage from "../features/works/WorksPage";
 import UsersPage from "../features/users/UsersPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import { useAuth } from "../features/auth/useAuth";
+import { ScrollToTop } from "../components/navigation/ScrollToTop";
 
 function HomeRedirect() {
   const { user } = useAuth();
@@ -22,6 +23,7 @@ function HomeRedirect() {
 export function AppRouter() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/login" element={<LoginPage />} />
 

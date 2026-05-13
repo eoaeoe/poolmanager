@@ -18,6 +18,7 @@ export default function LoginPage() {
     try {
       setError("");
       await login(email, password);
+      window.scrollTo(0, 0);
       navigate("/");
     } catch {
       setError("No se pudo iniciar sesión");
