@@ -61,9 +61,7 @@ export default function LoginPage() {
             />
             <label htmlFor="password">Contraseña</label>
           </span>
-
           {error ? <small className="p-error">{error}</small> : null}
-
           <Button label="Entrar" onClick={handleSubmit} />
         </div>
       </Card>
