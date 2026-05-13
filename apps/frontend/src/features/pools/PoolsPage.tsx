@@ -247,14 +247,32 @@ export default function PoolsPage() {
           <div className="flex gap-2 contenedorFileUpload">
             <FileUpload
               mode="basic"
-              accept="image/png,image/jpeg,image/webp"
-              maxFileSize={2000000}
+              accept="image/png,image/jpeg,image/jpg,image/webp,image/heic,image/heif"
+              maxFileSize={8000000}
               chooseOptions={chooseOptions}
               auto
               customUpload
               onSelect={(e) => {
                 const file = e.files?.[0] ?? null;
                 updateEditingPool({ image: file });
+              }}
+              onValidationFail={() => {
+                document.body.style.overflow = "";
+                document.body.style.paddingRight = "";
+                toast.current?.show({
+                  severity: "warn",
+                  summary: "Imagen no válida",
+                  detail: "La imagen no cumple el formato o tamaño permitido",
+                });
+              }}
+              onError={() => {
+                document.body.style.overflow = "";
+                document.body.style.paddingRight = "";
+                toast.current?.show({
+                  severity: "error",
+                  summary: "Error",
+                  detail: "No se pudo cargar la imagen",
+                });
               }}
             />
             {editingPool.imageUrl && (
