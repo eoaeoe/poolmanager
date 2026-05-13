@@ -226,7 +226,7 @@ export default function PoolsPage() {
             <img
               src={
                 editingPool?.imageUrl
-                  ? getImageUrl(editingPool.imageUrl) ?? defaultPoolImage
+                  ? (getImageUrl(editingPool.imageUrl) ?? defaultPoolImage)
                   : defaultPoolImage
               }
               alt="Piscina"
@@ -395,7 +395,9 @@ export default function PoolsPage() {
         </div>
         {editingPool.id && (
           <div className="mt-4">
-            <h3 className="mb-3">Histórico de mantenimientos</h3>
+            <h3 className="mb-3" style={{ color: "aqua" }}>
+              Histórico de mantenimientos
+            </h3>
 
             <WorksHistoryTable
               works={poolWorks}
