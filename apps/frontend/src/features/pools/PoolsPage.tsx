@@ -254,10 +254,6 @@ export default function PoolsPage() {
               customUpload
               onSelect={(e) => {
                 const file = e.files?.[0] ?? null;
-                console.log(file);
-                console.log(file?.type);
-                console.log(file?.name);
-                console.log(file?.size);
                 updateEditingPool({ image: file });
               }}
               onValidationFail={() => {
