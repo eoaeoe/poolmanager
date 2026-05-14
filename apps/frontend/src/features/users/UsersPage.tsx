@@ -253,7 +253,7 @@ export default function UsersPage() {
             <FileUpload
               mode="basic"
               accept="image/png,image/jpeg,image/jpg,image/webp,image/heic,image/heif"
-              maxFileSize={8000000}
+              maxFileSize={10000000}
               chooseOptions={chooseOptions}
               auto
               customUpload

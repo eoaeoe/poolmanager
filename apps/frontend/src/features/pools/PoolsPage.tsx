@@ -248,12 +248,16 @@ export default function PoolsPage() {
             <FileUpload
               mode="basic"
               accept="image/png,image/jpeg,image/jpg,image/webp,image/heic,image/heif"
-              maxFileSize={8000000}
+              maxFileSize={10000000}
               chooseOptions={chooseOptions}
               auto
               customUpload
               onSelect={(e) => {
                 const file = e.files?.[0] ?? null;
+                console.log(file);
+                console.log(file?.type);
+                console.log(file?.name);
+                console.log(file?.size);
                 updateEditingPool({ image: file });
               }}
               onValidationFail={() => {
