@@ -38,7 +38,8 @@ main section h1 {
 }
 
 .nombreRolUsuario {
-  color: #aedff6 !important;
+  /*color: #aedff6 !important;*/
+  color: aqua;
   font-weight: 100;
 }
 

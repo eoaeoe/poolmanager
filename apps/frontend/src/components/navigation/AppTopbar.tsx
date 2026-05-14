@@ -19,6 +19,7 @@ export function AppTopbar({ onMenuClick }: Props) {
       <div className="flex align-items-center gap-2">
         {/* Botón hamburguesa solo en móvil/tablet */}
         <button
+          style={{ color: "aqua" }}
           type="button"
           onClick={onMenuClick}
           className="lg:hidden border-none bg-transparent p-1 cursor-pointer flex align-items-center justify-content-center"
@@ -29,7 +30,7 @@ export function AppTopbar({ onMenuClick }: Props) {
         <img
           src={
             user?.imageUrl
-              ? getImageUrl(user.imageUrl) ?? defaultUserImage
+              ? (getImageUrl(user.imageUrl) ?? defaultUserImage)
               : defaultUserImage
           }
           alt="Usuario"
@@ -49,8 +50,10 @@ export function AppTopbar({ onMenuClick }: Props) {
           icon="pi pi-power-off"
           rounded
           style={{
-            color: "#aedff6",
-            border: "3px solid #aedff6",
+            // color: "#aedff6",
+            // border: "3px solid #aedff6",
+            color: "aqua",
+            border: "3px solid aqua",
             marginLeft: "10px",
           }}
           outlined
