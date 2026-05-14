@@ -42,16 +42,7 @@ export function MainLayout() {
       >
         <AppTopbar onMenuClick={() => setMobileSidebarVisible(true)} />
 
-        <main
-          className="flex-1 overflow-auto"
-          style={{
-            background: "#1f2937",
-            width: "100%",
-            maxWidth: "100%",
-            minWidth: 0,
-            overflowX: "hidden",
-          }}
-        >
+        <main className="app-main">
           <Outlet />
         </main>
       </div>
