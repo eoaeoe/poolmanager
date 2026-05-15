@@ -71,7 +71,7 @@ export function PoolLevelPieChart({ title, metric, data }: Props) {
       style={{ backgroundColor: "#4786a3" }}
     >
       {visibleGroups.length === 0 ? (
-        <p>No hay datos disponibles</p>
+        <p style={{ color: "white" }}>No hay datos disponibles</p>
       ) : (
         <Chart type="pie" data={chartData} options={options} />
       )}
