@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { MainLayout } from "../layouts/MainLayout";
 import LoginPage from "../pages/LoginPage";
-import DashboardPage from "../pages/DashboardPage";
+import DashboardPage from "../features/dashboard/DashboardPage";
 import PoolsPage from "../features/pools/PoolsPage";
 import WorksPage from "../features/works/WorksPage";
 import UsersPage from "../features/users/UsersPage";
@@ -39,6 +39,7 @@ export function AppRouter() {
             <Route path="/users" element={<UsersPage />} />
             <Route path="/pools" element={<PoolsPage />} />
             <Route path="/work" element={<WorksPage />} />
+            <Route path="/" element={<DashboardPage />} />
           </Route>
         </Route>
 

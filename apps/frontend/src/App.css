@@ -475,3 +475,21 @@ button:focus-visible {
     font-size: 16px !important;
   }
 }
+
+.grid-nogutter {
+  background-color: #5894b0 !important;
+  color: white;
+}
+
+#finish-work-dialog_content {
+  padding-left: 10px;
+  padding-right: 10px;
+}
+
+.cardTartas .p-card-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  color: aqua;
+  margin-bottom: 20px;
+}
