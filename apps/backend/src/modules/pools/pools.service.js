@@ -2,7 +2,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { Op } from "sequelize";
-import { Pool } from "../../../models/index.js";
+import { Pool, Work, User } from "../../../models/index.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -56,10 +56,50 @@ export async function findPoolsPaginated({
     offset,
     limit,
     order: [[safeSortField, safeSortOrder]],
+    include: [
+      {
+        model: Work,
+        as: "works",
+        required: false,
+        separate: true,
+        limit: 1,
+        order: [["finishedAt", "DESC"]],
+        where: {
+          status: "finished",
+        },
+        attributes: [
+          "id",
+          "finishedAt",
+          "startedAt",
+          "ph",
+          "freeChlorine",
+          "totalChlorine",
+          "alkalinity",
+          "waterAppearance",
+          "waterLevel",
+        ],
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "name"],
+          },
+        ],
+      },
+    ],
+  });
+
+  const pools = rows.map((pool) => {
+    const plainPool = pool.get({ plain: true });
+    return {
+      ...plainPool,
+      lastWork: plainPool.works?.[0] ?? null,
+      works: undefined,
+    };
   });
 
   return {
-    pools: rows,
+    pools,
     total: count,
     page,
     limit,
@@ -68,7 +108,51 @@ export async function findPoolsPaginated({
 }
 
 export async function findPoolById(id) {
-  return Pool.findByPk(id);
+  const pool = await Pool.findByPk(id, {
+    include: [
+      {
+        model: Work,
+        as: "works",
+        required: false,
+        separate: true,
+        limit: 1,
+        order: [["finishedAt", "DESC"]],
+        where: {
+          status: "finished",
+        },
+        attributes: [
+          "id",
+          "finishedAt",
+          "startedAt",
+          "ph",
+          "freeChlorine",
+          "totalChlorine",
+          "alkalinity",
+          "waterAppearance",
+          "waterLevel",
+        ],
+        include: [
+          {
+            model: User,
+            as: "user",
+            attributes: ["id", "name"],
+          },
+        ],
+      },
+    ],
+  });
+
+  if (!pool) {
+    return null;
+  }
+
+  const plainPool = pool.get({ plain: true });
+
+  return {
+    ...plainPool,
+    lastWork: plainPool.works?.[0] ?? null,
+    works: undefined,
+  };
 }
 
 export async function getAllPools() {

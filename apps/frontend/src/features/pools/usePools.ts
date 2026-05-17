@@ -223,6 +223,7 @@ export function usePools() {
         manualPumpOnAt: formatDateTimeLocal(pool.manualPumpOnAt),
         imageUrl: pool.imageUrl ?? null,
         image: null,
+        lastWork: pool.lastWork ?? null,
       },
     }));
     void loadPoolWorks(pool.id);

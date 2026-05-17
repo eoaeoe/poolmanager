@@ -10,7 +10,26 @@ export type PoolItem = {
   manualPumpOnAt?: string | null;
   imageUrl?: string | null;
   createdAt: string;
+  lastWork?: PoolLastWork | null;
 };
+
+export type PoolMeasurement = string | number | null;
+
+export interface PoolLastWork {
+  id: string;
+  startedAt: string | null;
+  finishedAt: string | null;
+  ph: PoolMeasurement;
+  freeChlorine: PoolMeasurement;
+  totalChlorine: PoolMeasurement;
+  alkalinity: PoolMeasurement;
+  waterAppearance: string | null;
+  waterLevel: string | null;
+  user?: {
+    id: string;
+    name: string;
+  } | null;
+}
 
 export type PoolsResponse = {
   pools: PoolItem[];
@@ -32,6 +51,7 @@ export type PoolFormValues = {
   manualPumpOnAt: string;
   image?: File | null;
   imageUrl?: string | null;
+  lastWork?: PoolLastWork | null;
 };
 
 export const emptyPoolForm: PoolFormValues = {

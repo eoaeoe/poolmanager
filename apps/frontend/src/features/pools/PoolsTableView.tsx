@@ -9,8 +9,13 @@ import { InputSwitch } from "primereact/inputswitch";
 import type { PoolItem, PoolsSort } from "./pools.types";
 import { getZoneNameByCode } from "./pools.constants";
 import defaultPoolImage from "../../assets/default-pool.jpg";
-import { formatElapsedTime } from "./pools.utils";
 import { getImageUrl } from "../../utils/imageUrl";
+import {
+  formatLastWorkDate,
+  formatPoolLevel,
+  formatElapsedTime,
+  formatWorkDurationMinutes,
+} from "./pools.utils";
 
 type Props = Readonly<{
   pools: PoolItem[];
@@ -83,7 +88,7 @@ export default function PoolsTableView({
             <img
               src={
                 rowData.imageUrl
-                  ? getImageUrl(rowData.imageUrl) ?? defaultPoolImage
+                  ? (getImageUrl(rowData.imageUrl) ?? defaultPoolImage)
                   : defaultPoolImage
               }
               alt=""
@@ -116,14 +121,6 @@ export default function PoolsTableView({
         )}
       />
 
-      {/* <Column
-        field="waterOpenAt"
-        header="Agua abierta desde"
-        body={(rowData: PoolItem) =>
-          rowData.waterOpen ? formatDateTime(rowData.waterOpenAt) : "-"
-        }
-      /> */}
-
       <Column
         header="Tiempo agua abierta"
         body={(rowData: PoolItem) =>
@@ -140,19 +137,49 @@ export default function PoolsTableView({
         )}
       />
 
-      {/* <Column
-        field="manualPumpOnAt"
-        header="Bomba manual desde"
-        body={(rowData: PoolItem) =>
-          rowData.manualPumpOn ? formatDateTime(rowData.manualPumpOnAt) : "-"
-        }
-      /> */}
-
       <Column
         header="Tiempo bomba manual"
         body={(rowData: PoolItem) =>
           rowData.manualPumpOn ? formatElapsedTime(rowData.manualPumpOnAt) : "-"
         }
+      />
+      <Column
+        header="Último empleado"
+        body={(rowData) => rowData.lastWork?.user?.name ?? "-"}
+      />
+
+      <Column
+        header="Último trabajo"
+        body={(rowData) => formatLastWorkDate(rowData.lastWork?.finishedAt)}
+      />
+
+      <Column
+        header="Duración último trabajo"
+        body={(rowData) =>
+          formatWorkDurationMinutes(
+            rowData.lastWork?.startedAt,
+            rowData.lastWork?.finishedAt,
+          )
+        }
+      />
+      <Column
+        header="pH"
+        body={(rowData) => formatPoolLevel(rowData.lastWork?.ph)}
+      />
+
+      <Column
+        header="Cloro libre"
+        body={(rowData) => formatPoolLevel(rowData.lastWork?.freeChlorine)}
+      />
+
+      <Column
+        header="Cloro total"
+        body={(rowData) => formatPoolLevel(rowData.lastWork?.totalChlorine)}
+      />
+
+      <Column
+        header="Alcalinidad"
+        body={(rowData) => formatPoolLevel(rowData.lastWork?.alkalinity)}
       />
 
       <Column

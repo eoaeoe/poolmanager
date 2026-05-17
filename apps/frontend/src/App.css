@@ -493,3 +493,9 @@ button:focus-visible {
   color: aqua;
   margin-bottom: 20px;
 }
+
+.p-disabled,
+.p-component:disabled,
+input:disabled {
+  opacity: 1 !important;
+}

@@ -37,3 +37,33 @@ export function formatDateTime(value?: string | null) {
 
   return date.toLocaleString();
 }
+
+export function formatPoolLevel(value: string | number | null | undefined) {
+  if (value === null || value === undefined || value === "") {
+    return "-";
+  }
+
+  return Number(value).toString();
+}
+
+export function formatLastWorkDate(value: string | null | undefined) {
+  if (!value) return "-";
+
+  return new Date(value).toLocaleString();
+}
+
+export function formatWorkDurationMinutes(
+  startedAt: string | null | undefined,
+  finishedAt: string | null | undefined,
+) {
+  if (!startedAt || !finishedAt) return "-";
+
+  const start = new Date(startedAt).getTime();
+  const end = new Date(finishedAt).getTime();
+
+  const minutes = Math.round((end - start) / 60000);
+
+  if (Number.isNaN(minutes) || minutes < 0) return "-";
+
+  return `${minutes} min`;
+}

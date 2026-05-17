@@ -7,9 +7,15 @@ import { InputSwitch } from "primereact/inputswitch";
 import type { PoolItem } from "./pools.types";
 import { getZoneNameByCode } from "./pools.constants";
 import defaultPoolImage from "../../assets/default-pool.jpg";
-import { IconDroplet, IconEngine } from "@tabler/icons-react";
-import { formatElapsedTime } from "./pools.utils";
+import { IconDroplet, IconEngine, IconStopwatch } from "@tabler/icons-react";
+import {
+  formatElapsedTime,
+  formatLastWorkDate,
+  formatPoolLevel,
+  formatWorkDurationMinutes,
+} from "./pools.utils";
 import { getImageUrl } from "../../utils/imageUrl";
+
 type Props = {
   pools: PoolItem[];
   loading: boolean;
@@ -40,7 +46,7 @@ export default function PoolsCardsView({
               <img
                 src={
                   pool.imageUrl
-                    ? getImageUrl(pool.imageUrl) ?? defaultPoolImage
+                    ? (getImageUrl(pool.imageUrl) ?? defaultPoolImage)
                     : defaultPoolImage
                 }
                 alt={pool.name}
@@ -84,7 +90,7 @@ export default function PoolsCardsView({
                 className="p-inputgroup-addon"
                 style={{ height: "stretch" }}
               >
-                <IconDroplet size={16} />
+                <IconDroplet size={20} />
               </span>
               <div className="w-full flex align-items-center justify-content-center">
                 <InputSwitch checked={pool.waterOpen} disabled />
@@ -109,7 +115,7 @@ export default function PoolsCardsView({
                 className="p-inputgroup-addon"
                 style={{ height: "stretch" }}
               >
-                <IconEngine size={16} />
+                <IconEngine size={20} />
               </span>
               <div className="w-full flex align-items-center justify-content-center">
                 <InputSwitch checked={pool.manualPumpOn} disabled />
@@ -128,19 +134,79 @@ export default function PoolsCardsView({
                 disabled
               />
             </div>
+            <div className="p-inputgroup flex-1">
+              <span className="p-inputgroup-addon">
+                <i className="pi pi-user"></i>
+              </span>
+              <InputText
+                placeholder="Último empleado"
+                className="w-full"
+                value={pool.lastWork?.user?.name ?? "-"}
+                disabled
+              />
+            </div>
 
-            {/* <div className="p-inputgroup flex-1">
+            <div className="p-inputgroup flex-1">
               <span className="p-inputgroup-addon">
                 <i className="pi pi-calendar"></i>
               </span>
               <InputText
-                id="createdAt"
-                placeholder="Fecha de alta"
+                placeholder="Último trabajo"
                 className="w-full"
-                value={new Date(pool.createdAt).toLocaleDateString()}
+                value={formatLastWorkDate(pool.lastWork?.finishedAt)}
                 disabled
               />
-            </div> */}
+            </div>
+            <div className="p-inputgroup flex-1">
+              <span className="p-inputgroup-addon">
+                <IconStopwatch size={20} />
+              </span>
+              <InputText
+                placeholder="Duración último trabajo"
+                className="w-full"
+                value={formatWorkDurationMinutes(
+                  pool.lastWork?.startedAt,
+                  pool.lastWork?.finishedAt,
+                )}
+                disabled
+              />
+            </div>
+
+            <div className="p-inputgroup flex-1">
+              <span className="p-inputgroup-addon">PH</span>
+              <InputText
+                className="w-full"
+                value={formatPoolLevel(pool.lastWork?.ph)}
+                disabled
+              />
+            </div>
+
+            <div className="p-inputgroup flex-1">
+              <span className="p-inputgroup-addon">CL</span>
+              <InputText
+                className="w-full"
+                value={formatPoolLevel(pool.lastWork?.freeChlorine)}
+                disabled
+              />
+            </div>
+
+            <div className="p-inputgroup flex-1">
+              <span className="p-inputgroup-addon">CLT</span>
+              <InputText
+                className="w-full"
+                value={formatPoolLevel(pool.lastWork?.totalChlorine)}
+                disabled
+              />
+            </div>
+
+            <div className="p-inputgroup flex-1">
+              <span className="p-inputgroup-addon">AL</span>
+              <InputText
+                className="w-full"
+                value={formatPoolLevel(pool.lastWork?.alkalinity)}
+                disabled
+              />
+            </div>
 
             <div className="flex gap-2 pt-2 justify-content-center">
               <Button

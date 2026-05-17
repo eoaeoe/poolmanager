@@ -17,6 +17,7 @@ import {
   IconPool,
   IconDroplet,
   IconEngine,
+  IconArrowsVertical,
 } from "@tabler/icons-react";
 import { getImageUrl } from "../../utils/imageUrl";
 import defaultPoolImage from "../../assets/default-pool.jpg";
@@ -27,6 +28,11 @@ import type { PoolItem } from "./pools.types";
 import PoolsTableView from "./PoolsTableView";
 import PoolsCardsView from "./PoolsCardsView";
 import { WorksHistoryTable } from "../works/worksHistoryTable";
+import {
+  formatLastWorkDate,
+  formatPoolLevel,
+  formatWorkDurationMinutes,
+} from "./pools.utils";
 
 export default function PoolsPage() {
   const toast = useRef<Toast>(null);
@@ -349,7 +355,7 @@ export default function PoolsPage() {
 
           <div className="flex align-items-center justify-content-between inputSwitchContainer">
             <span className="p-inputgroup-addon" style={{ height: "stretch" }}>
-              <IconDroplet size={16} />
+              <IconDroplet size={19} />
             </span>
             <div className="w-full flex align-items-center justify-content-center">
               <InputSwitch
@@ -363,27 +369,9 @@ export default function PoolsPage() {
               />
             </div>
           </div>
-
-          {/* {editingPool.waterOpen && (
-            <div className="p-inputgroup flex-1">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-clock"></i>
-              </span>
-              <InputText
-                id="waterOpenAt"
-                type="datetime-local"
-                className="w-full"
-                value={editingPool.waterOpenAt}
-                onChange={(e) =>
-                  updateEditingPool({ waterOpenAt: e.target.value })
-                }
-              />
-            </div>
-          )} */}
-
           <div className="flex align-items-center justify-content-between  inputSwitchContainer">
             <span className="p-inputgroup-addon" style={{ height: "stretch" }}>
-              <IconEngine size={16} />
+              <IconEngine size={19} />
             </span>
             <div className="w-full flex align-items-center justify-content-center">
               <InputSwitch
@@ -398,24 +386,111 @@ export default function PoolsPage() {
               />
             </div>
           </div>
-
-          {/* {editingPool.manualPumpOn && (
-            <div className="p-inputgroup flex-1">
-              <span className="p-inputgroup-addon">
-                <i className="pi pi-clock"></i>
-              </span>
-              <InputText
-                id="manualPumpOnAt"
-                type="datetime-local"
-                className="w-full"
-                value={editingPool.manualPumpOnAt}
-                onChange={(e) =>
-                  updateEditingPool({ manualPumpOnAt: e.target.value })
-                }
-              />
-            </div>
-          )} */}
         </div>
+        {editingPool.id && (
+          <div className="mt-4">
+            <div className="grid">
+              <div className="col-12 md:col-6">
+                <div className="p-inputgroup flex-1">
+                  <span className="p-inputgroup-addon">
+                    <i className="pi pi-user"></i>
+                  </span>
+                  <InputText
+                    className="w-full"
+                    value={editingPool.lastWork?.user?.name ?? "-"}
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div className="col-12 md:col-6">
+                <div className="p-inputgroup flex-1">
+                  <span className="p-inputgroup-addon">
+                    <i className="pi pi-calendar"></i>
+                  </span>
+                  <InputText
+                    className="w-full"
+                    value={`${formatLastWorkDate(editingPool.lastWork?.finishedAt)} (${formatWorkDurationMinutes(
+                      editingPool.lastWork?.startedAt,
+                      editingPool.lastWork?.finishedAt,
+                    )})`}
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div className="col-12 md:col-3">
+                <div className="p-inputgroup flex-1">
+                  <span className="p-inputgroup-addon">PH</span>
+                  <InputText
+                    className="w-full"
+                    value={formatPoolLevel(editingPool.lastWork?.ph)}
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div className="col-12 md:col-3">
+                <div className="p-inputgroup flex-1">
+                  <span className="p-inputgroup-addon">CL</span>
+                  <InputText
+                    className="w-full"
+                    value={formatPoolLevel(editingPool.lastWork?.freeChlorine)}
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div className="col-12 md:col-3">
+                <div className="p-inputgroup flex-1">
+                  <span className="p-inputgroup-addon">CLT</span>
+                  <InputText
+                    className="w-full"
+                    value={formatPoolLevel(editingPool.lastWork?.totalChlorine)}
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div className="col-12 md:col-3">
+                <div className="p-inputgroup flex-1">
+                  <span className="p-inputgroup-addon">AL</span>
+                  <InputText
+                    className="w-full"
+                    value={formatPoolLevel(editingPool.lastWork?.alkalinity)}
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div className="col-12 md:col-6">
+                <div className="p-inputgroup flex-1">
+                  <span className="p-inputgroup-addon">
+                    <IconDroplet size={16} />
+                  </span>
+                  <InputText
+                    className="w-full"
+                    value={editingPool.lastWork?.waterAppearance ?? "-"}
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div className="col-12 md:col-6">
+                <div className="p-inputgroup flex-1">
+                  <span className="p-inputgroup-addon">
+                    <IconArrowsVertical size={16} />
+                  </span>
+                  <InputText
+                    className="w-full"
+                    value={editingPool.lastWork?.waterLevel ?? "-"}
+                    disabled
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
         {editingPool.id && (
           <div className="mt-4">
             <h3 className="mb-3" style={{ color: "aqua" }}>

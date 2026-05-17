@@ -107,17 +107,32 @@ export async function finishWork({ workId, userId, data }) {
     comment: data.comment?.trim() || null,
   });
 
-  await Pool.update(
-    {
-      waterOpen: data.waterOpen,
-      manualPumpOn: data.manualPumpOn,
-    },
-    {
-      where: {
-        id: work.poolId,
-      },
-    },
-  );
+  const pool = await Pool.findByPk(work.poolId);
+
+  if (pool) {
+    const nextWaterOpen = data.waterOpen === "1";
+    const nextManualPumpOn = data.manualPumpOn === "1";
+
+    const wasWaterOpen = pool.waterOpen;
+    const wasManualPumpOn = pool.manualPumpOn;
+
+    pool.waterOpen = nextWaterOpen;
+    pool.manualPumpOn = nextManualPumpOn;
+
+    if (!wasWaterOpen && nextWaterOpen) {
+      pool.waterOpenAt = new Date();
+    } else if (wasWaterOpen && !nextWaterOpen) {
+      pool.waterOpenAt = null;
+    }
+
+    if (!wasManualPumpOn && nextManualPumpOn) {
+      pool.manualPumpOnAt = new Date();
+    } else if (wasManualPumpOn && !nextManualPumpOn) {
+      pool.manualPumpOnAt = null;
+    }
+
+    await pool.save();
+  }
 
   return {
     error: false,
