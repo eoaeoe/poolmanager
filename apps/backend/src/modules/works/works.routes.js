@@ -5,6 +5,7 @@ import {
   startWorkController,
   getWorksByUserController,
   getWorksByPoolController,
+  getWorksPaginatedController,
 } from "./works.controller.js";
 import { requireAuth } from "../../middlewares/auth.middleware.js";
 import { requireRole } from "../../middlewares/role.middleware.js";
@@ -45,5 +46,7 @@ router.get(
   requireRole("boss", "employee"),
   getWorksByPoolController,
 );
+
+router.get("/", requireAuth, requireRole("boss"), getWorksPaginatedController);
 
 export default router;

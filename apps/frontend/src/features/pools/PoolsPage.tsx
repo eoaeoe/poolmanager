@@ -339,9 +339,7 @@ export default function PoolsPage() {
           </div>
 
           <div className="p-inputgroup flex-1">
-            <span className="p-inputgroup-addon">
-              <i className="pi ">m3</i>
-            </span>
+            <span className="p-inputgroup-addon">m³</span>
             <InputText
               id="cubicMeters"
               placeholder="Metros cúbicos"

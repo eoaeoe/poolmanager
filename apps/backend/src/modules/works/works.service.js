@@ -1,5 +1,5 @@
 import { Pool, Work, User } from "../../../models/index.js";
-
+import { Op, literal } from "sequelize";
 export async function getCurrentWorkByUser(userId) {
   return await Work.findOne({
     where: {
@@ -173,4 +173,105 @@ export async function getWorksByPool(poolId) {
     ],
     order: [["finishedAt", "DESC"]],
   });
+}
+
+export async function findWorksPaginated({
+  page,
+  limit,
+  search,
+  sortField,
+  sortOrder,
+}) {
+  const offset = (page - 1) * limit;
+
+  const allowedSortFields = [
+    "startedAt",
+    "finishedAt",
+    "createdAt",
+    "ph",
+    "freeChlorine",
+    "totalChlorine",
+    "alkalinity",
+    "waterAppearance",
+    "waterLevel",
+    "waterOpen",
+    "manualPumpOn",
+    "pool.name",
+    "user.name",
+  ];
+
+  const safeSortField = allowedSortFields.includes(sortField)
+    ? sortField
+    : "finishedAt";
+
+  const safeSortOrder = sortOrder === "ASC" ? "ASC" : "DESC";
+
+  const where = {
+    status: "finished",
+  };
+
+  if (search) {
+    const cleanSearch = search.replaceAll("'", "''");
+
+    where[Op.and] = literal(`
+      (
+        "pool"."name" ILIKE '%${cleanSearch}%'
+        OR "user"."name" ILIKE '%${cleanSearch}%'
+        OR "Work"."waterAppearance"::text ILIKE '%${cleanSearch}%'
+        OR "Work"."waterLevel"::text ILIKE '%${cleanSearch}%'
+      )
+    `);
+  }
+
+  let order = [[safeSortField, safeSortOrder]];
+
+  if (safeSortField === "pool.name") {
+    order = [[{ model: Pool, as: "pool" }, "name", safeSortOrder]];
+  }
+
+  if (safeSortField === "user.name") {
+    order = [[{ model: User, as: "user" }, "name", safeSortOrder]];
+  }
+
+  if (safeSortField === "duration") {
+    order = [["finishedAt", safeSortOrder]];
+  }
+
+  const include = [
+    {
+      model: Pool,
+      as: "pool",
+      attributes: ["id", "name", "zoneCode"],
+      required: false,
+    },
+    {
+      model: User,
+      as: "user",
+      attributes: ["id", "name", "email", "role"],
+      required: false,
+    },
+  ];
+
+  const rows = await Work.findAll({
+    where,
+    offset,
+    limit,
+    order,
+    include,
+  });
+
+  const count = await Work.count({
+    where,
+    include,
+    distinct: true,
+    col: "id",
+  });
+
+  return {
+    works: rows,
+    total: count,
+    page,
+    limit,
+    totalPages: Math.ceil(count / limit),
+  };
 }

@@ -9,6 +9,7 @@ import UsersPage from "../features/users/UsersPage";
 import NotFoundPage from "../pages/NotFoundPage";
 import { useAuth } from "../features/auth/useAuth";
 import { ScrollToTop } from "../components/navigation/ScrollToTop";
+import WorksListPage from "../features/works/WorksListPage";
 
 function HomeRedirect() {
   const { user } = useAuth();
@@ -39,6 +40,7 @@ export function AppRouter() {
             <Route path="/users" element={<UsersPage />} />
             <Route path="/pools" element={<PoolsPage />} />
             <Route path="/work" element={<WorksPage />} />
+            <Route path="/works" element={<WorksListPage />} />
             <Route path="/" element={<DashboardPage />} />
           </Route>
         </Route>

@@ -497,5 +497,5 @@ button:focus-visible {
 .p-disabled,
 .p-component:disabled,
 input:disabled {
-  opacity: 1 !important;
+  /* opacity: 1 !important; */
 }

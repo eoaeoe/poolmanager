@@ -5,6 +5,7 @@ import {
   IconPool,
   IconFlood,
   IconUsers,
+  IconClipboardList,
 } from "@tabler/icons-react";
 import { useAuth } from "../../features/auth/useAuth";
 
@@ -30,6 +31,11 @@ export function AppSidebar({ mobile = false, onNavigate }: Props) {
           { to: "/", label: "Dashboard", icon: <IconDashboard size={20} /> },
           { to: "/pools", label: "Piscinas", icon: <IconPool size={20} /> },
           { to: "/users", label: "Usuarios", icon: <IconUsers size={20} /> },
+          {
+            to: "/works",
+            label: "Trabajos",
+            icon: <IconClipboardList size={20} />,
+          },
         ]
       : [];
 

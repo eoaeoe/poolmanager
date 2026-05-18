@@ -1,5 +1,5 @@
 import { api } from "../../services/api";
-import type { FinishWorkPayload, Work } from "./works.types";
+import type { FinishWorkPayload, Work, WorksListResponse } from "./works.types";
 
 export async function getCurrentWork(): Promise<Work | null> {
   const { data } = await api.get<Work | null>("/works/current");
@@ -26,5 +26,31 @@ export async function getWorksByUserApi(userId: string): Promise<Work[]> {
 
 export async function getWorksByPoolApi(poolId: string): Promise<Work[]> {
   const response = await api.get<Work[]>(`/works/by-pool/${poolId}`);
+  return response.data;
+}
+
+export async function getWorksApi(params: {
+  page: number;
+  limit: number;
+  search: string;
+  sortField: string;
+  sortOrder: "ASC" | "DESC";
+  signal?: AbortSignal;
+}) {
+  const searchParams = new URLSearchParams({
+    page: String(params.page),
+    limit: String(params.limit),
+    search: params.search,
+    sortField: params.sortField,
+    sortOrder: params.sortOrder,
+  });
+
+  const response = await api.get<WorksListResponse>(
+    `/works?${searchParams.toString()}`,
+    {
+      signal: params.signal,
+    },
+  );
+
   return response.data;
 }
