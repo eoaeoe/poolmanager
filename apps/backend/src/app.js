@@ -5,6 +5,7 @@ import indexRoutes from "./routes/index.routes.js";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes.js";
+import aiRoutes from "./modules/ai/ai.routes.js";
 
 const app = express();
 
@@ -19,5 +20,6 @@ app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use("/api", indexRoutes);
 app.use("/api/dashboard", dashboardRoutes);
+app.use("/api/ai", aiRoutes);
 
 export default app;
