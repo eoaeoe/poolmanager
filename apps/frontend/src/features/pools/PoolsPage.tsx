@@ -24,7 +24,7 @@ import {
 import { getImageUrl } from "../../utils/imageUrl";
 import defaultPoolImage from "../../assets/default-pool.jpg";
 import { useIsMobile } from "../../hooks/useIsMobile";
-import { poolZoneOptions } from "./pools.constants";
+import { poolZoneOptions, getZoneNameByCode } from "./pools.constants";
 import { usePools } from "./usePools";
 import type { PoolItem } from "./pools.types";
 import PoolsTableView from "./PoolsTableView";
@@ -39,7 +39,12 @@ import {
 export default function PoolsPage() {
   const toast = useRef<Toast>(null);
   const isMobile = useIsMobile();
-  const [aiDiagnosis, setAiDiagnosis] = useState("");
+  const [aiDiagnosis, setAiDiagnosis] = useState<{
+    title: string;
+    criticals: string[];
+    alerts: string[];
+    positives: string[];
+  } | null>(null);
   const [aiDialogVisible, setAiDialogVisible] = useState(false);
   const [loadingDiagnosis, setLoadingDiagnosis] = useState(false);
 
@@ -71,15 +76,26 @@ export default function PoolsPage() {
     try {
       setLoadingDiagnosis(true);
 
+      //LLAMADAS A OLLAMA COMENTADAS PARA NO UTILIZAR POR AHORA, SE DEJARÁN PARA FUTURAS MEJORAS EN LA QUE SE INCLUYA UN ANÁLISIS MÁS PROFUNDO Y PERSONALIZADO DE LOS DATOS DE LA PISCINA Y EL TIEMPO.
+      // const diagnosis = await generatePoolDiagnosisApi({
+      //   pool: {
+      //     name: editingPool.name,
+      //     zoneCode: editingPool.zoneCode,
+      //     cubicMeters: editingPool.cubicMeters,
+      //     waterOpen: editingPool.waterOpen,
+      //     manualPumpOn: editingPool.manualPumpOn,
+      //   },
+      //   zoneName: "Mazarron",
+      //   lastWork: editingPool.lastWork,
+      // });
+
       const diagnosis = await generatePoolDiagnosisApi({
         pool: {
           name: editingPool.name,
-          zoneCode: editingPool.zoneCode,
-          cubicMeters: editingPool.cubicMeters,
           waterOpen: editingPool.waterOpen,
           manualPumpOn: editingPool.manualPumpOn,
         },
-        zoneName: "Mazarron",
+        zoneName: getZoneNameByCode(editingPool.zoneCode),
         lastWork: editingPool.lastWork,
       });
 
@@ -537,7 +553,7 @@ export default function PoolsPage() {
             </div>
             <div className="flex justify-content-center mt-4">
               <Button
-                label="Diagnóstico IA"
+                label="Diagnóstico Automático"
                 icon="pi pi-sparkles"
                 loading={loadingDiagnosis}
                 onClick={generateDiagnosis}
@@ -550,19 +566,50 @@ export default function PoolsPage() {
               <Dialog
                 visible={aiDialogVisible}
                 onHide={() => setAiDialogVisible(false)}
-                header="Diagnóstico IA"
+                header={
+                  <div className="ai-dialog-header">
+                    <i className="pi pi-sparkles"></i>
+                    <span>{aiDiagnosis?.title}</span>
+                  </div>
+                }
                 modal
                 style={{ width: "100%", maxWidth: "45rem" }}
+                className="DialogAIDiagnosis"
               >
-                <p
-                  style={{
-                    whiteSpace: "pre-line",
-                    lineHeight: 1.6,
-                    color: "white",
-                  }}
-                >
-                  {aiDiagnosis}
-                </p>
+                {aiDiagnosis && (
+                  <div className="ai-diagnosis">
+                    {aiDiagnosis.criticals.length > 0 && (
+                      <div className="ai-diagnosis-block critical">
+                        <h3>
+                          <i className="pi pi-times-circle"></i> Crítico
+                        </h3>
+                        {aiDiagnosis.criticals.map((item) => (
+                          <p key={item}>• {item}</p>
+                        ))}
+                      </div>
+                    )}
+                    {aiDiagnosis.alerts.length > 0 && (
+                      <div className="ai-diagnosis-block warning">
+                        <h3>
+                          <i className="pi pi-exclamation-triangle"></i> Avisos
+                        </h3>
+                        {aiDiagnosis.alerts.map((item) => (
+                          <p key={item}>• {item}</p>
+                        ))}
+                      </div>
+                    )}
+                    {aiDiagnosis.positives.length > 0 && (
+                      <div className="ai-diagnosis-block success">
+                        <h3>
+                          <i className="pi pi-check-circle"></i> Correcto
+                        </h3>
+                        {aiDiagnosis.positives.map((item) => (
+                          <p key={item}>• {item}</p>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
               </Dialog>
             )}
           </>
