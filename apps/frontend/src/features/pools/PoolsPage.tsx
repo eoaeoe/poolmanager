@@ -1,4 +1,4 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { Button } from "primereact/button";
 import { Card } from "primereact/card";
 import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
@@ -8,6 +8,8 @@ import { InputText } from "primereact/inputtext";
 import { InputSwitch } from "primereact/inputswitch";
 import { Toast } from "primereact/toast";
 import { FileUpload } from "primereact/fileupload";
+import { generatePoolDiagnosisApi } from "../ai/ai.api";
+
 import type {
   DataTablePageEvent,
   DataTableSortEvent,
@@ -37,6 +39,9 @@ import {
 export default function PoolsPage() {
   const toast = useRef<Toast>(null);
   const isMobile = useIsMobile();
+  const [aiDiagnosis, setAiDiagnosis] = useState("");
+  const [aiDialogVisible, setAiDialogVisible] = useState(false);
+  const [loadingDiagnosis, setLoadingDiagnosis] = useState(false);
 
   const {
     pools,
@@ -62,6 +67,34 @@ export default function PoolsPage() {
     loadingPoolWorks,
   } = usePools();
 
+  const generateDiagnosis = async () => {
+    try {
+      setLoadingDiagnosis(true);
+
+      const diagnosis = await generatePoolDiagnosisApi({
+        pool: {
+          name: editingPool.name,
+          zoneCode: editingPool.zoneCode,
+          cubicMeters: editingPool.cubicMeters,
+          waterOpen: editingPool.waterOpen,
+          manualPumpOn: editingPool.manualPumpOn,
+        },
+        zoneName: "Mazarron",
+        lastWork: editingPool.lastWork,
+      });
+
+      setAiDiagnosis(diagnosis);
+      setAiDialogVisible(true);
+    } catch {
+      toast.current?.show({
+        severity: "error",
+        summary: "IA",
+        detail: "No se pudo generar el diagnóstico",
+      });
+    } finally {
+      setLoadingDiagnosis(false);
+    }
+  };
   const onPageChange = (event: DataTablePageEvent) => {
     setPage(event.first, event.rows);
   };
@@ -490,17 +523,49 @@ export default function PoolsPage() {
           </div>
         )}
         {editingPool.id && (
-          <div className="mt-4">
-            <h3 className="mb-3" style={{ color: "aqua" }}>
-              Histórico de mantenimientos
-            </h3>
+          <>
+            <div className="mt-4">
+              <h3 className="mb-3" style={{ color: "aqua" }}>
+                Histórico de mantenimientos
+              </h3>
 
-            <WorksHistoryTable
-              works={poolWorks}
-              showUser
-              loading={loadingPoolWorks}
-            />
-          </div>
+              <WorksHistoryTable
+                works={poolWorks}
+                showUser
+                loading={loadingPoolWorks}
+              />
+            </div>
+            <div className="flex justify-content-center mt-4">
+              <Button
+                label="Diagnóstico IA"
+                icon="pi pi-sparkles"
+                loading={loadingDiagnosis}
+                onClick={generateDiagnosis}
+                style={{ backgroundColor: "#1e435f" }}
+                rounded
+                raised
+              />
+            </div>
+            {aiDiagnosis && (
+              <Dialog
+                visible={aiDialogVisible}
+                onHide={() => setAiDialogVisible(false)}
+                header="Diagnóstico IA"
+                modal
+                style={{ width: "100%", maxWidth: "45rem" }}
+              >
+                <p
+                  style={{
+                    whiteSpace: "pre-line",
+                    lineHeight: 1.6,
+                    color: "white",
+                  }}
+                >
+                  {aiDiagnosis}
+                </p>
+              </Dialog>
+            )}
+          </>
         )}
       </Dialog>
     </section>

@@ -19,4 +19,7 @@ export const env = {
   jwtRefreshExpiresIn: process.env.JWT_REFRESH_EXPIRES_IN || "7d",
 
   refreshCookieName: process.env.COOKIE_REFRESH_TOKEN_NAME || "refresh_token",
+
+  ollamaUrl: process.env.OLLAMA_URL ?? "http://localhost:11434",
+  ollamaModel: process.env.OLLAMA_MODEL ?? "llama3.2",
 };
