@@ -1,5 +1,10 @@
 import { api } from "../../services/api";
-import type { PoolFormValues, PoolsResponse, PoolOption } from "./pools.types";
+import type {
+  PoolFormValues,
+  PoolsResponse,
+  PoolOption,
+  PoolItem,
+} from "./pools.types";
 
 type GetPoolsParams = {
   page: number;
@@ -86,5 +91,10 @@ export async function deletePoolApi(id: string) {
 
 export async function removePoolImageApi(id: string) {
   const response = await api.delete(`/pools/${id}/image`);
+  return response.data;
+}
+
+export async function getPoolByIdApi(poolId: string) {
+  const response = await api.get<PoolItem>(`/pools/${poolId}`);
   return response.data;
 }

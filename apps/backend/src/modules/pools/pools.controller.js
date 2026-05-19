@@ -266,3 +266,21 @@ export async function removePoolImageController(req, res) {
     });
   }
 }
+
+export async function getPoolByIdController(req, res, next) {
+  try {
+    const { id } = req.params;
+
+    const pool = await findPoolById(id);
+
+    if (!pool) {
+      return res.status(404).json({
+        message: "Piscina no encontrada",
+      });
+    }
+
+    return res.status(200).json(pool);
+  } catch (error) {
+    next(error);
+  }
+}

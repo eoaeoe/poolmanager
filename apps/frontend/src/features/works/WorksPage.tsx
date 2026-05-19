@@ -3,10 +3,12 @@ import { Dropdown } from "primereact/dropdown";
 import { Message } from "primereact/message";
 import { IconClock, IconFlood, IconPool } from "@tabler/icons-react";
 import { FinishWorkDialog } from "./FinishWorkDialog";
+import { AIDiagnosisDialog } from "../ai/AIDiagnosisDialog";
 import { useWorks } from "./useWorks";
 import { formatWorkStartDate } from "./works.utils";
 import { Card } from "primereact/card";
 import { InputText } from "primereact/inputtext";
+
 export default function WorksPage() {
   const {
     pools,
@@ -21,6 +23,11 @@ export default function WorksPage() {
     error,
     handleStartWork,
     handleFinishWork,
+    aiDiagnosis,
+    aiDialogVisible,
+    setAiDialogVisible,
+    loadingDiagnosis,
+    handleGenerateSelectedPoolDiagnosis,
   } = useWorks();
 
   return (
@@ -110,7 +117,7 @@ export default function WorksPage() {
             </div>
           </div>
 
-          <div>
+          <div className="flex flex-column align-items-center gap-4">
             <Button
               icon="pi pi-play"
               onClick={handleStartWork}
@@ -122,7 +129,7 @@ export default function WorksPage() {
                 width: "100px",
                 height: "100px",
                 marginTop: "35px",
-                marginBottom: "50px",
+                marginBottom: "35px",
                 background: "#004565",
                 color: "aqua",
               }}
@@ -130,9 +137,26 @@ export default function WorksPage() {
               disabled={!selectedPoolId || loading}
               loading={loading}
             />
+
+            <Button
+              label="Diagnóstico Automático"
+              icon="pi pi-sparkles"
+              loading={loadingDiagnosis}
+              onClick={handleGenerateSelectedPoolDiagnosis}
+              style={{ backgroundColor: "#1e435f" }}
+              disabled={!selectedPoolId || loading}
+              rounded
+              raised
+            />
           </div>
         </div>
       )}
+
+      <AIDiagnosisDialog
+        visible={aiDialogVisible}
+        diagnosis={aiDiagnosis}
+        onHide={() => setAiDialogVisible(false)}
+      />
 
       <FinishWorkDialog
         visible={finishDialogVisible}

@@ -6,6 +6,7 @@ import {
   removePoolImageController,
   updatePoolController,
   getAllPoolsController,
+  getPoolByIdController,
 } from "./pools.controller.js";
 import { requireAuth } from "../../middlewares/auth.middleware.js";
 import { requireRole } from "../../middlewares/role.middleware.js";
@@ -45,6 +46,13 @@ router.delete(
   requireAuth,
   requireRole("boss"),
   removePoolImageController,
+);
+
+router.get(
+  "/:id",
+  requireAuth,
+  requireRole("boss", "employee"),
+  getPoolByIdController,
 );
 
 export default router;

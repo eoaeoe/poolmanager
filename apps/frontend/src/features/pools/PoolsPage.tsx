@@ -9,6 +9,7 @@ import { InputSwitch } from "primereact/inputswitch";
 import { Toast } from "primereact/toast";
 import { FileUpload } from "primereact/fileupload";
 import { generatePoolDiagnosisApi } from "../ai/ai.api";
+import { AIDiagnosisDialog } from "../ai/AIDiagnosisDialog";
 
 import type {
   DataTablePageEvent,
@@ -563,54 +564,11 @@ export default function PoolsPage() {
               />
             </div>
             {aiDiagnosis && (
-              <Dialog
+              <AIDiagnosisDialog
                 visible={aiDialogVisible}
+                diagnosis={aiDiagnosis}
                 onHide={() => setAiDialogVisible(false)}
-                header={
-                  <div className="ai-dialog-header">
-                    <i className="pi pi-sparkles"></i>
-                    <span>{aiDiagnosis?.title}</span>
-                  </div>
-                }
-                modal
-                style={{ width: "100%", maxWidth: "45rem" }}
-                className="DialogAIDiagnosis"
-              >
-                {aiDiagnosis && (
-                  <div className="ai-diagnosis">
-                    {aiDiagnosis.criticals.length > 0 && (
-                      <div className="ai-diagnosis-block critical">
-                        <h3>
-                          <i className="pi pi-times-circle"></i> Crítico
-                        </h3>
-                        {aiDiagnosis.criticals.map((item) => (
-                          <p key={item}>• {item}</p>
-                        ))}
-                      </div>
-                    )}
-                    {aiDiagnosis.alerts.length > 0 && (
-                      <div className="ai-diagnosis-block warning">
-                        <h3>
-                          <i className="pi pi-exclamation-triangle"></i> Avisos
-                        </h3>
-                        {aiDiagnosis.alerts.map((item) => (
-                          <p key={item}>• {item}</p>
-                        ))}
-                      </div>
-                    )}
-                    {aiDiagnosis.positives.length > 0 && (
-                      <div className="ai-diagnosis-block success">
-                        <h3>
-                          <i className="pi pi-check-circle"></i> Correcto
-                        </h3>
-                        {aiDiagnosis.positives.map((item) => (
-                          <p key={item}>• {item}</p>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                )}
-              </Dialog>
+              />
             )}
           </>
         )}

@@ -65,6 +65,7 @@ export const emptyPoolForm: PoolFormValues = {
   manualPumpOnAt: "",
   image: null,
   imageUrl: null,
+  lastWork: null,
 };
 
 export type PoolsPagination = {
