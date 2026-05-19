@@ -388,7 +388,7 @@ export default function PoolsPage() {
         {editingPool.id && (
           <div className="mt-4">
             <div className="grid">
-              <div className="col-12 md:col-6">
+              <div className="col-12 md:col-12">
                 <div className="p-inputgroup flex-1">
                   <span className="p-inputgroup-addon">
                     <i className="pi pi-user"></i>
@@ -401,7 +401,7 @@ export default function PoolsPage() {
                 </div>
               </div>
 
-              <div className="col-12 md:col-6">
+              <div className="col-12 md:col-12">
                 <div className="p-inputgroup flex-1">
                   <span className="p-inputgroup-addon">
                     <i className="pi pi-calendar"></i>
@@ -417,7 +417,7 @@ export default function PoolsPage() {
                 </div>
               </div>
 
-              <div className="col-12 md:col-3">
+              <div className="col-6 md:col-6">
                 <div className="p-inputgroup flex-1">
                   <span className="p-inputgroup-addon">PH</span>
                   <InputText
@@ -428,7 +428,7 @@ export default function PoolsPage() {
                 </div>
               </div>
 
-              <div className="col-12 md:col-3">
+              <div className="col-6 md:col-6">
                 <div className="p-inputgroup flex-1">
                   <span className="p-inputgroup-addon">CL</span>
                   <InputText
@@ -439,7 +439,7 @@ export default function PoolsPage() {
                 </div>
               </div>
 
-              <div className="col-12 md:col-3">
+              <div className="col-6 md:col-6">
                 <div className="p-inputgroup flex-1">
                   <span className="p-inputgroup-addon">CLT</span>
                   <InputText
@@ -450,7 +450,7 @@ export default function PoolsPage() {
                 </div>
               </div>
 
-              <div className="col-12 md:col-3">
+              <div className="col-6 md:col-6">
                 <div className="p-inputgroup flex-1">
                   <span className="p-inputgroup-addon">AL</span>
                   <InputText
@@ -461,7 +461,7 @@ export default function PoolsPage() {
                 </div>
               </div>
 
-              <div className="col-12 md:col-6">
+              <div className="col-12 md:col-12">
                 <div className="p-inputgroup flex-1">
                   <span className="p-inputgroup-addon">
                     <IconDroplet size={16} />
@@ -474,7 +474,7 @@ export default function PoolsPage() {
                 </div>
               </div>
 
-              <div className="col-12 md:col-6">
+              <div className="col-12 md:col-12">
                 <div className="p-inputgroup flex-1">
                   <span className="p-inputgroup-addon">
                     <IconArrowsVertical size={16} />

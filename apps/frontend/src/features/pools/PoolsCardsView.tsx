@@ -145,7 +145,6 @@ export default function PoolsCardsView({
                 disabled
               />
             </div>
-
             <div className="p-inputgroup flex-1">
               <span className="p-inputgroup-addon">
                 <i className="pi pi-calendar"></i>
@@ -171,43 +170,51 @@ export default function PoolsCardsView({
                 disabled
               />
             </div>
+            <div className="pool-levels-grid">
+              <div className="pool-level-item">
+                <div className="p-inputgroup">
+                  <span className="p-inputgroup-addon">PH</span>
+                  <InputText
+                    className="w-full"
+                    value={formatPoolLevel(pool.lastWork?.ph)}
+                    disabled
+                  />
+                </div>
+              </div>
 
-            <div className="p-inputgroup flex-1">
-              <span className="p-inputgroup-addon">PH</span>
-              <InputText
-                className="w-full"
-                value={formatPoolLevel(pool.lastWork?.ph)}
-                disabled
-              />
+              <div className="pool-level-item">
+                <div className="p-inputgroup">
+                  <span className="p-inputgroup-addon">CL</span>
+                  <InputText
+                    className="w-full"
+                    value={formatPoolLevel(pool.lastWork?.freeChlorine)}
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div className="pool-level-item">
+                <div className="p-inputgroup">
+                  <span className="p-inputgroup-addon">CLT</span>
+                  <InputText
+                    className="w-full"
+                    value={formatPoolLevel(pool.lastWork?.totalChlorine)}
+                    disabled
+                  />
+                </div>
+              </div>
+
+              <div className="pool-level-item">
+                <div className="p-inputgroup">
+                  <span className="p-inputgroup-addon">AL</span>
+                  <InputText
+                    className="w-full"
+                    value={formatPoolLevel(pool.lastWork?.alkalinity)}
+                    disabled
+                  />
+                </div>
+              </div>
             </div>
-
-            <div className="p-inputgroup flex-1">
-              <span className="p-inputgroup-addon">CL</span>
-              <InputText
-                className="w-full"
-                value={formatPoolLevel(pool.lastWork?.freeChlorine)}
-                disabled
-              />
-            </div>
-
-            <div className="p-inputgroup flex-1">
-              <span className="p-inputgroup-addon">CLT</span>
-              <InputText
-                className="w-full"
-                value={formatPoolLevel(pool.lastWork?.totalChlorine)}
-                disabled
-              />
-            </div>
-
-            <div className="p-inputgroup flex-1">
-              <span className="p-inputgroup-addon">AL</span>
-              <InputText
-                className="w-full"
-                value={formatPoolLevel(pool.lastWork?.alkalinity)}
-                disabled
-              />
-            </div>
-
             <div className="flex gap-2 pt-2 justify-content-center">
               <Button
                 icon="pi pi-pencil"
