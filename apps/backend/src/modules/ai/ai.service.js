@@ -1,61 +1,82 @@
-import { env } from "../../config/env.js";
 import { getWeatherByZone } from "../weather/weather.service.js";
 import { generateRuleBasedDiagnosis } from "./ai.rules.js";
+import { openai } from "../../lib/openai.js";
 
-export async function generatePoolDiagnosis(poolData) {
-  const weather = await getWeatherByZone(poolData.zoneName ?? "Mazarrón");
+function generateFallbackDiagnosis(data, weather) {
   return generateRuleBasedDiagnosis({
-    pool: poolData,
-    lastWork: poolData.lastWork,
+    pool: data.pool,
+    lastWork: data.lastWork,
     weather,
   });
+}
 
-  //LLAMADAS A OLLAMA COMENTADAS PARA NO UTILIZAR POR AHORA, SE DEJARÁN PARA FUTURAS MEJORAS EN LA QUE SE INCLUYA UN ANÁLISIS MÁS PROFUNDO Y PERSONALIZADO DE LOS DATOS DE LA PISCINA Y EL TIEMPO.
-  //   const prompt = `
-  // Eres un asistente técnico para mantenimiento de piscinas.
+export async function generatePoolDiagnosis(data) {
+  const weather = await getWeatherByZone(data.zoneName ?? "Mazarrón");
+  try {
+    const prompt = `
+Actúa como un técnico profesional de mantenimiento de piscinas.
+Analiza esta información y genera un diagnóstico breve.
+No tengas en cuenta si el agua está abierta o no o si la bomba está encendida o no, solo analiza los datos químicos, estado del agua y nivel y el clima.
+DATOS:
+${JSON.stringify(data, null, 2)}
 
-  // Analiza los datos de la piscina de forma breve y profesional teniendo también en cuenta el tiempo actual.
-
-  // Datos de la piscina:
-
-  // ${JSON.stringify(poolData, null, 2)}
-
-  // Tiempo actual:
-
-  // ${JSON.stringify(weather, null, 2)}
-
-  // Ten en cuenta que temperaturas altas, humedad, lluvia o calor intenso pueden afectar al cloro, evaporación, nivel del agua y aparición de algas.
-
-  // Datos:
-  // ${JSON.stringify(poolData, null, 2)}
-
-  // Devuelve:
-  // 1. Estado general
-  // 2. Posibles problemas
-  // 3. Recomendación de actuación
-  // 4. Céntrate en el nivel de agua, la turbidez, el ph, el cloro libre, el cloro total y la alcalinidad, obvia si el agua está abierta y si la bomba está funcionando.
-  // 5. Si puedes obtener información del tiempo y temperatura actual de Mazarrón que es donde están todas las piscinas, inclúyela en el análisis.
-  // 6. cuando ves pool sustituye por piscina, cuando ves water sustituye por agua, cuando ves temperature sustituye por temperatura, cuando ves weather sustituye por tiempo, cuando ves turbidity sustituye por turbidez, cuando ves alkalinity sustituye por alcalinidad, cuando ves free chlorine sustituye por cloro libre, cuando ves total chlorine sustituye por cloro total.
-  // 7. No pidas que te pregunte más información, haz el análisis con lo que tienes ya que no tenemos la opción de interactuar contigo para pedirte más datos.
-  // `;
-
-  //   const response = await fetch(`${env.ollamaUrl}/api/generate`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       model: env.ollamaModel,
-  //       prompt,
-  //       stream: false,
-  //     }),
-  //   });
-
-  //   if (!response.ok) {
-  //     throw new Error("No se pudo generar el diagnóstico con Ollama");
-  //   }
-
-  //   const data = await response.json();
-
-  //   return data.response;
+Clima actual:
+- Temperatura: ${weather?.temperature ?? "N/D"} ºC,
+- Humedad: ${weather?.humidity ?? "N/D"} %,
+- Estado: ${weather?.description ?? "N/D"},
+- Viento: ${weather?.windSpeed ?? "N/D"} m/s,
+- Precipitación: ${weather?.precipitation ?? "N/D"} mm/h,
+Responde SOLO en JSON válido con este formato:
+{
+  "title": "Diagnóstico automático",
+  "criticals": [],
+  "alerts": [],
+  "positives": []
+}`;
+    const response = await openai.chat.completions.create(
+      {
+        model: "gpt-4.1-mini",
+        temperature: 0.2,
+        response_format: {
+          type: "json_object",
+        },
+        messages: [
+          {
+            role: "system",
+            content:
+              "Eres un experto en mantenimiento profesional de piscinas. Responde siempre en JSON válido.",
+          },
+          {
+            role: "user",
+            content: prompt,
+          },
+        ],
+      },
+      {
+        timeout: 10000,
+      },
+    );
+    const content = response.choices[0]?.message?.content;
+    if (!content) {
+      return generateFallbackDiagnosis(data, weather);
+    }
+    const diagnosis = JSON.parse(content);
+    if (
+      !diagnosis ||
+      !Array.isArray(diagnosis.criticals) ||
+      !Array.isArray(diagnosis.alerts) ||
+      !Array.isArray(diagnosis.positives)
+    ) {
+      return generateFallbackDiagnosis(data, weather);
+    }
+    return diagnosis;
+  } catch (error) {
+    console.error("OPENAI DIAGNOSIS ERROR, USING FALLBACK:", {
+      message: error.message,
+      status: error.status,
+      code: error.code,
+      type: error.type,
+    });
+    return generateFallbackDiagnosis(data, weather);
+  }
 }

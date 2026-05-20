@@ -21,8 +21,6 @@ export function generateRuleBasedDiagnosis({ pool, lastWork, weather }) {
 
   const temperature = Number(weather?.temperature);
 
-  // PH
-
   if (ph < 7) {
     alerts.push("El pH está bajo. Puede provocar irritación y corrosión.");
   }
@@ -41,8 +39,6 @@ export function generateRuleBasedDiagnosis({ pool, lastWork, weather }) {
     );
   }
 
-  // CLORO
-
   if (freeChlorine < 0.5) {
     criticals.push(
       "El cloro libre es muy bajo. Riesgo elevado de mala desinfección.",
@@ -56,8 +52,6 @@ export function generateRuleBasedDiagnosis({ pool, lastWork, weather }) {
   if (freeChlorine > 4) {
     alerts.push("El cloro libre es elevado. Puede provocar irritación.");
   }
-
-  // CLORO COMBINADO
 
   if (combinedChlorine > 0.6) {
     alerts.push(
@@ -81,8 +75,6 @@ export function generateRuleBasedDiagnosis({ pool, lastWork, weather }) {
     );
   }
 
-  // APARIENCIA
-
   if (lastWork.waterAppearance === "verde") {
     criticals.push(
       "El agua presenta coloración verde. Posible proliferación de algas.",
@@ -99,8 +91,6 @@ export function generateRuleBasedDiagnosis({ pool, lastWork, weather }) {
     positives.push("El agua presenta un aspecto visual correcto.");
   }
 
-  // NIVEL
-
   if (lastWork.waterLevel === "bajo") {
     alerts.push(
       "El nivel del agua es bajo. Puede afectar al funcionamiento de la depuradora.",
@@ -113,21 +103,29 @@ export function generateRuleBasedDiagnosis({ pool, lastWork, weather }) {
     );
   }
 
-  // CLIMA
-
-  if (temperature >= 30) {
+  if (temperature >= 35) {
     alerts.push(
       "La temperatura exterior es alta. Puede aumentar evaporación y consumo de cloro.",
     );
   }
 
-  if (weather?.precipitation > 0) {
+  if (temperature >= 35 && weather?.humidity >= 70) {
     alerts.push(
-      "Hay lluvia registrada. Puede alterar los parámetros del agua.",
+      "Las condiciones ambientales actuales favorecen el deterioro más rápido de la calidad del agua.",
     );
   }
 
-  // SISTEMA
+  if (weather?.precipitation > 0) {
+    alerts.push(
+      "La lluvia puede alterar los parámetros químicos del agua y reducir la efectividad del cloro.",
+    );
+  }
+
+  if (weather?.description?.toLowerCase().includes("rain")) {
+    alerts.push(
+      "Se detecta lluvia. Los parámetros del agua podrían alterarse.",
+    );
+  }
 
   if (pool.waterOpen) {
     alerts.push("La piscina tiene el agua marcada como abierta.");

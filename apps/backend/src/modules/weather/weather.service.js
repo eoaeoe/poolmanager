@@ -1,3 +1,5 @@
+import { getWeatherDescription } from "./weather.utils.js";
+
 export async function getWeatherByZone(zoneName) {
   const geoUrl = new URL("https://geocoding-api.open-meteo.com/v1/search");
 
@@ -47,5 +49,6 @@ export async function getWeatherByZone(zoneName) {
     precipitation: weatherData.current?.precipitation,
     weatherCode: weatherData.current?.weather_code,
     time: weatherData.current?.time,
+    description: getWeatherDescription(weatherData.current?.weather_code),
   };
 }
