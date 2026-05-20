@@ -597,3 +597,8 @@ button:focus-visible {
   display: flex;
   justify-content: center;
 }
+
+.dashboardSection .p-card-body {
+  background: #4786a3;
+  color: aqua;
+}

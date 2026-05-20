@@ -1,28 +1,15 @@
-import { useEffect, useState } from "react";
 import { ProgressSpinner } from "primereact/progressspinner";
-import {
-  getPoolLevelsDashboardApi,
-  type PoolLevelDashboardItem,
-} from "./dashboard.api";
-import { PoolLevelPieChart } from "./PoolLevelPieChart";
 import { IconDashboard } from "@tabler/icons-react";
+import { useDashboard } from "./useDashboard";
+import { DashboardKpiCards } from "./DashboardKpiCards";
+import { DashboardPoolStatusChart } from "./DashboardPoolStatusChart";
+import { DashboardWorksByDayChart } from "./DashboardWorksByDayChart";
+import { DashboardAlerts } from "./DashboardAlerts";
+import { DashboardRecentActivity } from "./DashboardRecentActivity";
+import { PoolLevelPieChart } from "./PoolLevelPieChart";
 
 export default function DashboardPage() {
-  const [data, setData] = useState<PoolLevelDashboardItem[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    async function loadDashboard() {
-      try {
-        const response = await getPoolLevelsDashboardApi();
-        setData(response);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadDashboard();
-  }, []);
+  const { dashboard, poolLevels, loading } = useDashboard();
 
   if (loading) {
     return (
@@ -32,8 +19,12 @@ export default function DashboardPage() {
     );
   }
 
+  if (!dashboard) {
+    return <section>No se pudo cargar el dashboard.</section>;
+  }
+
   return (
-    <section>
+    <section className="dashboardSection">
       <div className="flex flex-column md:flex-row md:align-items-center md:justify-content-between gap-3 mb-4">
         <div>
           <h2 className="m-0 tituloSeccion">
@@ -41,32 +32,57 @@ export default function DashboardPage() {
           </h2>
         </div>
       </div>
+
+      <DashboardKpiCards dashboard={dashboard} />
+
+      <div className="grid mt-3">
+        <div className="col-12 lg:col-3">
+          <DashboardPoolStatusChart dashboard={dashboard} />
+        </div>
+
+        <div className="col-12 lg:col-3">
+          <DashboardWorksByDayChart dashboard={dashboard} />
+        </div>
+
+        <div className="col-12 lg:col-3">
+          <DashboardAlerts dashboard={dashboard} />
+        </div>
+
+        <div className="col-12 lg:col-3">
+          <DashboardRecentActivity dashboard={dashboard} />
+        </div>
+      </div>
+
       <div className="grid mt-3">
         <div className="col-12 md:col-3">
-          <PoolLevelPieChart title="PH por piscina" metric="ph" data={data} />
+          <PoolLevelPieChart
+            title="PH por valor"
+            metric="ph"
+            data={poolLevels}
+          />
         </div>
 
         <div className="col-12 md:col-3">
           <PoolLevelPieChart
-            title="Cloro libre por piscina"
+            title="Cloro libre por valor"
             metric="freeChlorine"
-            data={data}
+            data={poolLevels}
           />
         </div>
 
         <div className="col-12 md:col-3">
           <PoolLevelPieChart
-            title="Cloro total por piscina"
+            title="Cloro total por valor"
             metric="totalChlorine"
-            data={data}
+            data={poolLevels}
           />
         </div>
 
         <div className="col-12 md:col-3">
           <PoolLevelPieChart
-            title="Alcalinidad por piscina"
+            title="Alcalinidad por valor"
             metric="alkalinity"
-            data={data}
+            data={poolLevels}
           />
         </div>
       </div>

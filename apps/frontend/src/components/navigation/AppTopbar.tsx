@@ -42,7 +42,7 @@ export function AppTopbar({ onMenuClick }: Props) {
           }}
         />
         <strong className="text-sm md:text-base nombreRolUsuario">
-          {user?.name} ({user?.role})
+          {user?.name} ({user?.role == "boss" ? "Jefe" : "Empleado"})
         </strong>
       </div>
       <div className="flex align-items-center gap-2">
