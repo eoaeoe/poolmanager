@@ -600,5 +600,12 @@ button:focus-visible {
 
 .dashboardSection .p-card-body {
   background: #4786a3;
+  color: rgb(255, 255, 255);
+}
+
+.dashboardSection .p-card-title {
+  font-size: 20px;
+  font-weight: 100;
+  text-align: center;
   color: aqua;
 }
