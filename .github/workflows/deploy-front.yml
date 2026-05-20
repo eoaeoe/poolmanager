@@ -1,18 +1,17 @@
-name: Deploy Frontend
+name: Deploy
 
 on:
   push:
     branches:
       - main
-    paths:
-      - "apps/frontend/**"
+  workflow_dispatch:
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Deploy frontend on server
+      - name: Deploy on server
         uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.SERVER_HOST }}
