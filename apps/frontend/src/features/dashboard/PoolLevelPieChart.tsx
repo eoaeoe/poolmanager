@@ -1,6 +1,6 @@
 import { Chart } from "primereact/chart";
 import { Card } from "primereact/card";
-import type { PoolLevelDashboardItem } from "./dashboard.api";
+import type { PoolLevelDashboardItem } from "./dashboard.types";
 import { LEVEL_COLOR_PRESETS } from "../works/works.constants";
 
 type MetricKey = "ph" | "freeChlorine" | "totalChlorine" | "alkalinity";
