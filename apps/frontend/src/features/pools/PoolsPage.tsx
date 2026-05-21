@@ -10,6 +10,7 @@ import { Toast } from "primereact/toast";
 import { FileUpload } from "primereact/fileupload";
 import { generatePoolDiagnosisApi } from "../ai/ai.api";
 import { AIDiagnosisDialog } from "../ai/AIDiagnosisDialog";
+import { PoolLocationMap } from "./PoolLocationMap";
 
 import type {
   DataTablePageEvent,
@@ -76,20 +77,6 @@ export default function PoolsPage() {
   const generateDiagnosis = async () => {
     try {
       setLoadingDiagnosis(true);
-
-      //LLAMADAS A OLLAMA COMENTADAS PARA NO UTILIZAR POR AHORA, SE DEJARÁN PARA FUTURAS MEJORAS EN LA QUE SE INCLUYA UN ANÁLISIS MÁS PROFUNDO Y PERSONALIZADO DE LOS DATOS DE LA PISCINA Y EL TIEMPO.
-      // const diagnosis = await generatePoolDiagnosisApi({
-      //   pool: {
-      //     name: editingPool.name,
-      //     zoneCode: editingPool.zoneCode,
-      //     cubicMeters: editingPool.cubicMeters,
-      //     waterOpen: editingPool.waterOpen,
-      //     manualPumpOn: editingPool.manualPumpOn,
-      //   },
-      //   zoneName: "Mazarron",
-      //   lastWork: editingPool.lastWork,
-      // });
-
       const diagnosis = await generatePoolDiagnosisApi({
         pool: {
           name: editingPool.name,
@@ -112,6 +99,45 @@ export default function PoolsPage() {
       setLoadingDiagnosis(false);
     }
   };
+
+  const handleUseCurrentLocation = () => {
+    if (!navigator.geolocation) {
+      toast.current?.show({
+        severity: "warn",
+        summary: "Ubicación",
+        detail: "El navegador no soporta geolocalización",
+      });
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        updateEditingPool({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        });
+
+        toast.current?.show({
+          severity: "success",
+          summary: "Ubicación",
+          detail: "Ubicación asignada correctamente",
+        });
+      },
+      () => {
+        toast.current?.show({
+          severity: "error",
+          summary: "Ubicación",
+          detail: "No se pudo obtener la ubicación",
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 10000,
+        maximumAge: 0,
+      },
+    );
+  };
+
   const onPageChange = (event: DataTablePageEvent) => {
     setPage(event.first, event.rows);
   };
@@ -401,6 +427,34 @@ export default function PoolsPage() {
             />
           </div>
 
+          {/* <div className="grid">
+            <div className="col-12 md:col-6">
+              <div className="p-inputgroup flex-1">
+                <span className="p-inputgroup-addon">LAT</span>
+                <InputText
+                  className="w-full"
+                  value={
+                    editingPool.latitude ? String(editingPool.latitude) : ""
+                  }
+                  disabled
+                />
+              </div>
+            </div>
+
+            <div className="col-12 md:col-6">
+              <div className="p-inputgroup flex-1">
+                <span className="p-inputgroup-addon">LON</span>
+                <InputText
+                  className="w-full"
+                  value={
+                    editingPool.longitude ? String(editingPool.longitude) : ""
+                  }
+                  disabled
+                />
+              </div>
+            </div>
+          </div> */}
+
           <div className="flex align-items-center justify-content-between inputSwitchContainer">
             <span className="p-inputgroup-addon" style={{ height: "stretch" }}>
               <IconDroplet size={19} />
@@ -539,6 +593,45 @@ export default function PoolsPage() {
             </div>
           </div>
         )}
+        <div style={{ marginTop: "20px" }}>
+          <PoolLocationMap
+            latitude={editingPool.latitude}
+            longitude={editingPool.longitude}
+            onChange={({ lat, lng }) =>
+              updateEditingPool({
+                latitude: lat,
+                longitude: lng,
+              })
+            }
+          />
+        </div>
+        <div className="flex justify-content-center">
+          <Button
+            label="Usar ubicación actual"
+            icon="pi pi-map-marker"
+            onClick={handleUseCurrentLocation}
+            style={{ backgroundColor: "#1e435f", marginTop: "25px" }}
+            rounded
+            raised
+          />
+        </div>
+        {/* {editingPool.latitude && editingPool.longitude && (
+          <div className="flex justify-content-center">
+            <Button
+              label="Ver en mapa"
+              icon="pi pi-map"
+              style={{ backgroundColor: "#1e435f", marginLeft: "15px" }}
+              rounded
+              raised
+              onClick={() =>
+                window.open(
+                  `https://www.google.com/maps?q=${editingPool.latitude},${editingPool.longitude}`,
+                  "_blank",
+                )
+              }
+            />
+          </div>
+        )} */}
         {editingPool.id && (
           <>
             <div className="mt-4">

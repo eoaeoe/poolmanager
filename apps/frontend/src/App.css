@@ -598,9 +598,15 @@ button:focus-visible {
   justify-content: center;
 }
 
+.dashboardSection .p-card {
+  border-radius: 6px;
+  background: #4786a3;
+}
+
 .dashboardSection .p-card-body {
   background: #4786a3;
   color: rgb(255, 255, 255);
+  border-radius: 6px;
 }
 
 .dashboardSection .p-card-title {

@@ -11,6 +11,8 @@ export type PoolItem = {
   imageUrl?: string | null;
   createdAt: string;
   lastWork?: PoolLastWork | null;
+  latitude?: string | number | null;
+  longitude?: string | number | null;
 };
 
 export type PoolMeasurement = string | number | null;
@@ -51,6 +53,8 @@ export type PoolFormValues = {
   manualPumpOnAt: string;
   image?: File | null;
   imageUrl?: string | null;
+  latitude?: string | number | null;
+  longitude?: string | number | null;
   lastWork?: PoolLastWork | null;
 };
 
@@ -66,6 +70,8 @@ export const emptyPoolForm: PoolFormValues = {
   image: null,
   imageUrl: null,
   lastWork: null,
+  latitude: null,
+  longitude: null,
 };
 
 export type PoolsPagination = {

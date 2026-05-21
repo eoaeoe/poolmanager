@@ -48,6 +48,14 @@ export function PoolModel(sequelize) {
         type: DataTypes.STRING(300),
         allowNull: true,
       },
+      latitude: {
+        type: DataTypes.DECIMAL(10, 7),
+        allowNull: true,
+      },
+      longitude: {
+        type: DataTypes.DECIMAL(10, 7),
+        allowNull: true,
+      },
     },
     {
       tableName: "pools",

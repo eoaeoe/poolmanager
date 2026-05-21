@@ -50,6 +50,8 @@ export async function findPoolsPaginated({
       "manualPumpOn",
       "manualPumpOnAt",
       "imageUrl",
+      "latitude",
+      "longitude",
       "createdAt",
     ],
     where,
@@ -181,6 +183,8 @@ export async function createPool(data) {
     manualPumpOn: data.manualPumpOn ?? false,
     manualPumpOnAt: data.manualPumpOn ? now : null,
     imageUrl: data.imageUrl ?? null,
+    latitude: data.latitude ?? null,
+    longitude: data.longitude ?? null,
   });
 }
 
@@ -209,6 +213,14 @@ export async function updatePool(id, data) {
 
   if (data.imageUrl !== undefined) {
     pool.imageUrl = data.imageUrl;
+  }
+
+  if (data.latitude !== undefined) {
+    pool.latitude = data.latitude;
+  }
+
+  if (data.longitude !== undefined) {
+    pool.longitude = data.longitude;
   }
 
   if (data.waterOpen !== undefined) {

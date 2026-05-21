@@ -223,6 +223,8 @@ export function usePools() {
         manualPumpOnAt: formatDateTimeLocal(pool.manualPumpOnAt),
         imageUrl: pool.imageUrl ?? null,
         image: null,
+        latitude: pool.latitude ?? null,
+        longitude: pool.longitude ?? null,
         lastWork: pool.lastWork ?? null,
       },
     }));

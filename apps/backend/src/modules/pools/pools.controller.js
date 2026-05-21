@@ -59,7 +59,8 @@ export function prepareUpdateData(
   parsedWaterOpen,
   parsedManualPumpOn,
 ) {
-  const { name, zoneCode, dimensionsText, cubicMeters } = req.body;
+  const { name, zoneCode, dimensionsText, cubicMeters, latitude, longitude } =
+    req.body;
 
   return {
     name,
@@ -78,6 +79,14 @@ export function prepareUpdateData(
     imageUrl: req.file
       ? `/uploads/pools/${req.file.filename}`
       : existingPool.imageUrl,
+    latitude:
+      latitude !== undefined && latitude !== null && latitude != ""
+        ? Number(latitude)
+        : null,
+    longitude:
+      longitude !== undefined && longitude !== null && longitude != ""
+        ? Number(longitude)
+        : null,
   };
 }
 
@@ -116,6 +125,8 @@ export async function createPoolController(req, res) {
       cubicMeters,
       waterOpen,
       manualPumpOn,
+      latitude,
+      longitude,
     } = req.body;
 
     if (!name || !zoneCode) {
@@ -150,6 +161,8 @@ export async function createPoolController(req, res) {
       cubicMeters: cubicMeters ? Number(cubicMeters) : null,
       waterOpen: parsedWaterOpen,
       manualPumpOn: parsedManualPumpOn,
+      latitude: latitude ? Number(latitude) : null,
+      longitude: longitude ? Number(longitude) : null,
       imageUrl,
     });
 

@@ -59,6 +59,14 @@ function buildPoolFormData(values: PoolFormValues) {
     formData.append("manualPumpOnAt", values.manualPumpOnAt);
   }
 
+  if (values.latitude !== null && values.latitude !== undefined) {
+    formData.append("latitude", String(values.latitude));
+  }
+
+  if (values.longitude !== null && values.longitude !== undefined) {
+    formData.append("longitude", String(values.longitude));
+  }
+
   if (values.image) {
     formData.append("image", values.image);
   }
