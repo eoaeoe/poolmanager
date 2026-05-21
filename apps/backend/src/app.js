@@ -6,6 +6,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import dashboardRoutes from "./modules/dashboard/dashboard.routes.js";
 import aiRoutes from "./modules/ai/ai.routes.js";
+import reportsRoutes from "./modules/reports/reports.routes.js";
 
 const app = express();
 
@@ -16,6 +17,7 @@ app.use(corsMiddleware);
 app.use(express.json());
 app.use(cookieParser());
 
+app.use("/api/reports", reportsRoutes);
 app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 app.use("/api", indexRoutes);
