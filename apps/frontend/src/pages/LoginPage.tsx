@@ -31,12 +31,12 @@ export default function LoginPage() {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <img
             src="/logo.png"
-            style={{ width: "60px", opacity: 0.8, marginBottom: "0px" }}
+            style={{ width: "150px", opacity: 1, marginBottom: "0px" }}
             alt="logo"
           />
         </div>
         <div className="mb-6" style={{ color: "#ffffff26" }}>
-          <h2 className="text-center">PoolManager</h2>
+          {/* <h2 className="text-center">PoolManager</h2> */}
         </div>
         <div className="flex flex-column gap-3 mb-3">
           <span className="p-float-label">
