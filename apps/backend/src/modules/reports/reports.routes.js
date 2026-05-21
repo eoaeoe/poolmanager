@@ -1,8 +1,8 @@
 import { Router } from "express";
-import { generateWeeklyReportController } from "./reports.controller.js";
+import { generateWeeklyReportPdfController } from "./reports.controller.js";
 
 const router = Router();
 
-router.post("/weekly", generateWeeklyReportController);
+router.post("/weekly/pdf", generateWeeklyReportPdfController);
 
 export default router;

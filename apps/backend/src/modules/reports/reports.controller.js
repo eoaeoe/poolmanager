@@ -1,21 +1,23 @@
 import { env } from "../../config/env.js";
-import { generateWeeklyReport } from "./reports.service.js";
+import { generateWeeklyReportPdf } from "./reports.service.js";
 
-export async function generateWeeklyReportController(req, res, next) {
+export async function generateWeeklyReportPdfController(req, res, next) {
   try {
     const secret = req.headers["x-report-secret"];
 
     if (secret !== env.reportSecret) {
-      return res.status(401).json({
-        message: "No autorizado",
-      });
+      return res.status(401).json({ message: "No autorizado" });
     }
 
-    const report = await generateWeeklyReport();
+    const pdfBuffer = await generateWeeklyReportPdf();
 
-    return res.status(200).json({
-      report,
-    });
+    res.setHeader("Content-Type", "application/pdf");
+    res.setHeader(
+      "Content-Disposition",
+      'attachment; filename="informe-semanal-poolmanager.pdf"',
+    );
+
+    return res.send(pdfBuffer);
   } catch (error) {
     next(error);
   }
