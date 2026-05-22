@@ -54,7 +54,7 @@ export function AppSidebar({ mobile = false, onNavigate }: Props) {
         <div style={{ display: "flex", justifyContent: "center" }}>
           <img
             src="/logo.png"
-            style={{ width: "60px", opacity: 1, marginBottom: "0px" }}
+            style={{ width: "90px", opacity: 1, marginBottom: "0px" }}
             alt="logo"
           />
         </div>
