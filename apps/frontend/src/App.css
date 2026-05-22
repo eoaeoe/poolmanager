@@ -626,16 +626,51 @@ button:focus-visible {
   justify-content: center;
   gap: 1rem;
   z-index: 9999;
+  opacity: 1;
+  transform: scale(1);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s ease;
+}
+
+.app-splash--leaving {
+  opacity: 0;
+  transform: scale(1.04);
+  pointer-events: none;
 }
 
 .app-splash-logo {
   width: 120px;
   height: 120px;
   object-fit: contain;
+  animation: splash-logo-in 0.7s ease both;
 }
 
 .app-splash h1 {
   color: aqua;
   font-size: 2rem;
   font-weight: 600;
+  animation: splash-title-in 0.8s ease both;
+}
+
+@keyframes splash-logo-in {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes splash-title-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }

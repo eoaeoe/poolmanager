@@ -6,24 +6,34 @@ export function AppSplash({
 }: {
   readonly children: React.ReactNode;
 }) {
-  const [showSplash, setShowSplash] = useState(true);
+  const [visible, setVisible] = useState(true);
+  const [leaving, setLeaving] = useState(false);
 
   useEffect(() => {
-    const timeout = globalThis.window.setTimeout(() => {
-      setShowSplash(false);
-    }, 1500);
+    const startExit = globalThis.window.setTimeout(() => {
+      setLeaving(true);
+    }, 1300);
 
-    return () => globalThis.window.clearTimeout(timeout);
+    const removeSplash = globalThis.window.setTimeout(() => {
+      setVisible(false);
+    }, 1800);
+
+    return () => {
+      globalThis.window.clearTimeout(startExit);
+      globalThis.window.clearTimeout(removeSplash);
+    };
   }, []);
 
-  if (showSplash) {
-    return (
-      <div className="app-splash">
-        <img src={logo} alt="PoolManager" className="app-splash-logo" />
-        <h1>PoolManager</h1>
-      </div>
-    );
-  }
+  return (
+    <>
+      {children}
 
-  return children;
+      {visible && (
+        <div className={`app-splash ${leaving ? "app-splash--leaving" : ""}`}>
+          <img src={logo} alt="PoolManager" className="app-splash-logo" />
+          <h1>PoolManager</h1>
+        </div>
+      )}
+    </>
+  );
 }
