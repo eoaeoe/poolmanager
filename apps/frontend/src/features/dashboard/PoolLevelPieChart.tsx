@@ -35,8 +35,8 @@ export function PoolLevelPieChart({ title, metric, data }: Props) {
       {
         data: visibleGroups.map((group) => group.count),
         backgroundColor: visibleGroups.map((group) => group.color),
-        borderColor: "aqua",
-        borderWidth: 2,
+        borderColor: "white",
+        borderWidth: 3,
       },
     ],
   };
