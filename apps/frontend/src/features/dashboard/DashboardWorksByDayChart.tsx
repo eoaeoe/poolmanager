@@ -24,19 +24,19 @@ export function DashboardWorksByDayChart({ dashboard }: Props) {
     plugins: {
       legend: {
         labels: {
-          color: "#1f2937",
+          color: "#ffffff",
         },
       },
     },
     scales: {
       x: {
         ticks: {
-          color: "#1f2937",
+          color: "#ffffff",
         },
       },
       y: {
         ticks: {
-          color: "#1f2937",
+          color: "#ffffff",
         },
         beginAtZero: true,
       },

@@ -16,9 +16,9 @@ export function DashboardPoolStatusChart({ dashboard }: Props) {
           dashboard.poolStatus.warning,
           dashboard.poolStatus.critical,
         ],
-        backgroundColor: ["#22c55e", "#f59e0b", "#ef4444"],
-        borderColor: "#1f2937",
-        borderWidth: 2,
+        backgroundColor: ["#00ff5e", "#ffa200", "#ff0000"],
+        borderColor: "white",
+        borderWidth: 3,
       },
     ],
   };
@@ -28,7 +28,7 @@ export function DashboardPoolStatusChart({ dashboard }: Props) {
       legend: {
         position: "bottom",
         labels: {
-          color: "#1f2937",
+          color: "#ffffff",
         },
       },
     },

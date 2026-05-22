@@ -25,7 +25,7 @@ export function DashboardAlerts({ dashboard }: Props) {
             className="flex align-items-center justify-content-between gap-3"
           >
             <div className="flex align-items-center gap-2">
-              <IconAlertTriangle size={20} color="#f59e0b" />
+              <IconAlertTriangle size={24} color="#ffa200" />
               <div>
                 <strong>{alert.poolName}</strong>
                 <div style={{ fontSize: "0.85rem" }}>
