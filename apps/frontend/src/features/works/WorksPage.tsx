@@ -108,6 +108,8 @@ export default function WorksPage() {
                 value={selectedPoolId}
                 options={pools}
                 optionLabel="name"
+                filter
+                showClear
                 optionValue="id"
                 style={{ lineHeight: "28px", minWidth: "300px" }}
                 placeholder="Selecciona una piscina"
