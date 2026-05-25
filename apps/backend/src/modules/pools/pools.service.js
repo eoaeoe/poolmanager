@@ -71,6 +71,8 @@ export async function findPoolsPaginated({
         },
         attributes: [
           "id",
+          "userId",
+          "poolId",
           "finishedAt",
           "startedAt",
           "ph",
@@ -124,6 +126,8 @@ export async function findPoolById(id) {
         },
         attributes: [
           "id",
+          "userId",
+          "poolId",
           "finishedAt",
           "startedAt",
           "ph",
