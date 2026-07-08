@@ -146,7 +146,7 @@ export async function logout(req, res) {
 }
 
 export async function me(req, res) {
-  const user = await findUserById(req.user.sub);
+  const user = await findUserById(req.user.id);
 
   if (!user) {
     return res.status(404).json({
