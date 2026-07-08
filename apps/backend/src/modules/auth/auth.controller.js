@@ -3,6 +3,7 @@ import {
   deleteRefreshToken,
   deleteRefreshTokensByUserId,
   findUserByEmail,
+  findUserById,
   getRefreshToken,
   saveRefreshToken,
   validatePassword,
@@ -145,7 +146,15 @@ export async function logout(req, res) {
 }
 
 export async function me(req, res) {
+  const user = await findUserById(req.user.sub);
+
+  if (!user) {
+    return res.status(404).json({
+      message: "Usuario no encontrado",
+    });
+  }
+
   return res.json({
-    user: req.user,
+    user: buildUserResponse(user),
   });
 }

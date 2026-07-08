@@ -45,3 +45,7 @@ export async function deleteRefreshTokensByUserId(userId) {
     where: { userId },
   });
 }
+
+export async function findUserById(id) {
+  return User.findByPk(id);
+}
